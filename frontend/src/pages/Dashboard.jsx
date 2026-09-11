@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Layers, CheckCircle2, Clock, AlertTriangle, Plus, ArrowRight, TrendingUp, FolderKanban, FolderPlus, PlusCircle } from 'lucide-react';
+import { Layers, CheckCircle2, Clock, AlertTriangle, Plus, ArrowRight, TrendingUp, FolderKanban } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { dashboardService } from '../services/dashboardService';
 import { projectService } from '../services/projectService';
@@ -115,26 +115,6 @@ const Dashboard = () => {
           <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
             Here is the current momentum and flow state of your projects.
           </p>
-        </div>
-
-        {/* Quick Action Triggers */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <button
-            onClick={() => setIsTaskModalOpen(true)}
-            className="btn btn-secondary"
-            style={{ gap: '0.5rem', fontWeight: 700 }}
-          >
-            <PlusCircle size={18} style={{ color: '#2563eb' }} />
-            <span>Add Task</span>
-          </button>
-          <button
-            onClick={() => setIsProjectModalOpen(true)}
-            className="btn btn-primary"
-            style={{ gap: '0.5rem', fontWeight: 700 }}
-          >
-            <FolderPlus size={18} />
-            <span>Ignite Project</span>
-          </button>
         </div>
       </motion.div>
 
