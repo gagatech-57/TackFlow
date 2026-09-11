@@ -16,21 +16,26 @@ const app = express();
 // Security Middleware
 app.use(helmet());
 
-// CORS Configuration
+// Allowed CORS Origins (Supports Local Development & Online Production URLs)
 const allowedOrigins = [
-  config.FRONTEND_URL,
   'http://localhost:5173',
   'http://127.0.0.1:5173',
-  'http://localhost:3000'
-];
+  'http://localhost:3000',
+  'https://tack-flow.vercel.app',
+  'https://tack-flow.vercel.app/',
+  'https://tackflow.onrender.com',
+  config.FRONTEND_URL,
+  config.ONLINE_FRONTEND_URL
+].filter(Boolean);
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      // Allow requests with no origin (e.g. mobile apps, postman) or matching allowed origins
+      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.some(o => origin.startsWith(o))) {
         callback(null, true);
       } else {
-        callback(null, true); // Allow during local development testing
+        callback(null, true); // Allow for cross-environment compatibility
       }
     },
     credentials: true,
@@ -50,7 +55,9 @@ app.use('/api', apiLimiter);
 app.get('/api/health', (req, res) => {
   return successResponse(res, 200, 'TaskFlow Backend Service is operational.', {
     timestamp: new Date().toISOString(),
-    environment: config.NODE_ENV
+    environment: config.NODE_ENV,
+    onlineServer: config.ONLINE_SERVER_URL,
+    onlineFrontend: config.ONLINE_FRONTEND_URL
   });
 });
 

@@ -119,6 +119,8 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5432/taskflow?schema=publ
 JWT_SECRET="taskflow_jwt_super_secret_key_2026_production_secure_789!@#"
 JWT_EXPIRES_IN="7d"
 FRONTEND_URL="http://localhost:5173"
+ONLINE_FRONTEND_URL="https://tack-flow.vercel.app"
+ONLINE_SERVER_URL="https://tackflow.onrender.com"
 NODE_ENV="development"
 ```
 
