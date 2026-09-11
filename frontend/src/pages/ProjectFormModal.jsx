@@ -5,6 +5,8 @@ import Modal from '../components/common/Modal';
 import KineticLoader from '../components/common/KineticLoader';
 import { projectService } from '../services/projectService';
 import { useToast } from '../context/ToastContext';
+import CustomSelect from '../components/common/CustomSelect';
+import CustomDatePicker from '../components/common/CustomDatePicker';
 
 const ProjectFormModal = ({ isOpen, onClose, projectToEdit = null, onProjectSaved }) => {
   const [formData, setFormData] = useState({
@@ -199,41 +201,37 @@ const ProjectFormModal = ({ isOpen, onClose, projectToEdit = null, onProjectSave
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div className="form-group">
                 <label className="form-label" htmlFor="proj-status">Workflow Status</label>
-                <select
+                <CustomSelect
                   id="proj-status"
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="form-select"
-                >
-                  <option value="Not Started">Not Started</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Completed">Completed</option>
-                </select>
+                  options={[
+                    { value: 'Not Started', label: 'Not Started' },
+                    { value: 'In Progress', label: 'In Progress' },
+                    { value: 'Completed', label: 'Completed' }
+                  ]}
+                />
               </div>
 
               <div className="form-group">
                 <label className="form-label" htmlFor="proj-start">Start Date</label>
-                <input
+                <CustomDatePicker
                   id="proj-start"
-                  type="date"
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleChange}
-                  className="form-input"
                 />
               </div>
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="proj-end">Target End Date</label>
-              <input
+              <CustomDatePicker
                 id="proj-end"
-                type="date"
                 name="endDate"
                 value={formData.endDate}
                 onChange={handleChange}
-                className="form-input"
               />
             </div>
 

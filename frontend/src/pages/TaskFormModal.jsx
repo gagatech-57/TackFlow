@@ -6,6 +6,8 @@ import KineticLoader from '../components/common/KineticLoader';
 import { taskService } from '../services/taskService';
 import { projectService } from '../services/projectService';
 import { useToast } from '../context/ToastContext';
+import CustomSelect from '../components/common/CustomSelect';
+import CustomDatePicker from '../components/common/CustomDatePicker';
 
 const TaskFormModal = ({
   isOpen,
@@ -198,19 +200,15 @@ const TaskFormModal = ({
 
             <div className="form-group">
               <label className="form-label" htmlFor="task-proj">Project Stream *</label>
-              <select
+              <CustomSelect
                 id="task-proj"
                 name="projectId"
                 value={formData.projectId}
                 onChange={handleChange}
-                className="form-select"
+                placeholder="Select Project Stream"
+                options={projects.map((p) => ({ value: p.id, label: p.name }))}
                 required
-              >
-                <option value="" disabled>Select Project Stream</option>
-                {projects.map((p) => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
-                ))}
-              </select>
+              />
             </div>
 
             <div className="form-group">
@@ -243,44 +241,42 @@ const TaskFormModal = ({
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div className="form-group">
                 <label className="form-label" htmlFor="task-status">Status</label>
-                <select
+                <CustomSelect
                   id="task-status"
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="form-select"
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Completed">Completed</option>
-                </select>
+                  options={[
+                    { value: 'Pending', label: 'Pending' },
+                    { value: 'In Progress', label: 'In Progress' },
+                    { value: 'Completed', label: 'Completed' }
+                  ]}
+                />
               </div>
 
               <div className="form-group">
                 <label className="form-label" htmlFor="task-priority">Priority</label>
-                <select
+                <CustomSelect
                   id="task-priority"
                   name="priority"
                   value={formData.priority}
                   onChange={handleChange}
-                  className="form-select"
-                >
-                  <option value="Low">Low Priority</option>
-                  <option value="Medium">Medium Priority</option>
-                  <option value="High">High Priority</option>
-                </select>
+                  options={[
+                    { value: 'Low', label: 'Low Priority' },
+                    { value: 'Medium', label: 'Medium Priority' },
+                    { value: 'High', label: 'High Priority' }
+                  ]}
+                />
               </div>
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="task-due">Due Date</label>
-              <input
+              <CustomDatePicker
                 id="task-due"
-                type="date"
                 name="dueDate"
                 value={formData.dueDate}
                 onChange={handleChange}
-                className="form-input"
               />
             </div>
 

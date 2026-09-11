@@ -9,6 +9,8 @@ import TaskFormModal from './TaskFormModal';
 import Modal from '../components/common/Modal';
 import { useToast } from '../context/ToastContext';
 
+import CustomSelect from '../components/common/CustomSelect';
+
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -202,17 +204,18 @@ const Tasks = () => {
         </div>
 
         {/* Priority Filter Select */}
-        <select
-          value={priorityFilter}
-          onChange={(e) => setPriorityFilter(e.target.value)}
-          className="form-select"
-          style={{ width: 'auto', padding: '0.4rem 0.75rem' }}
-        >
-          <option value="All">All Priorities</option>
-          <option value="High">High Priority</option>
-          <option value="Medium">Medium Priority</option>
-          <option value="Low">Low Priority</option>
-        </select>
+        <div style={{ minWidth: '160px' }}>
+          <CustomSelect
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
+            options={[
+              { value: 'All', label: 'All Priorities' },
+              { value: 'High', label: 'High Priority' },
+              { value: 'Medium', label: 'Medium Priority' },
+              { value: 'Low', label: 'Low Priority' }
+            ]}
+          />
+        </div>
       </div>
 
       {/* Task Streams Workflow Board */}
