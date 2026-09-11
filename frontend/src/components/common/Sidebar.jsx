@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LayoutGrid, FolderKanban, CheckSquare, LogOut, Zap, User } from 'lucide-react';
+import { LayoutGrid, FolderKanban, CheckSquare, LogOut, Zap, User, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 
@@ -9,6 +9,26 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
   const { user, logout } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isMobileOpen) {
+        setIsMobileOpen(false);
+      }
+    };
+
+    if (isMobileOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMobileOpen, setIsMobileOpen]);
 
   const handleLogout = () => {
     logout();
@@ -28,13 +48,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
       {isMobileOpen && (
         <div
           onClick={() => setIsMobileOpen(false)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.4)',
-            backdropFilter: 'blur(4px)',
-            zIndex: 90
-          }}
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[90]"
         />
       )}
 
@@ -50,53 +64,67 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
         top: 0,
         height: '100vh',
         zIndex: 100,
-        transition: 'transform 0.3s ease'
+        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
       }}>
         <div>
           {/* Kinetic Workspace Logo Header */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.75rem',
+            justifyContent: 'space-between',
             padding: '0 0.5rem 1.75rem 0.5rem',
             borderBottom: '1px solid var(--border-subtle)',
             marginBottom: '1.5rem'
           }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#ffffff',
-              boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)'
-            }}>
-              <Zap size={22} fill="#ffffff" />
-            </div>
-            <div>
-              <span style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '1.2rem',
-                fontWeight: 800,
-                color: 'var(--text-main)',
-                letterSpacing: '-0.02em',
-                display: 'block',
-                lineHeight: 1.1
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#ffffff',
+                boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)'
               }}>
-                TaskFlow
-              </span>
-              <span style={{
-                fontSize: '0.6875rem',
-                fontWeight: 700,
-                color: '#2563eb',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em'
-              }}>
-                Kinetic Workspace
-              </span>
+                <Zap size={22} fill="#ffffff" />
+              </div>
+              <div>
+                <span style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '1.2rem',
+                  fontWeight: 800,
+                  color: 'var(--text-main)',
+                  letterSpacing: '-0.02em',
+                  display: 'block',
+                  lineHeight: 1.1
+                }}>
+                  TaskFlow
+                </span>
+                <span style={{
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  color: '#2563eb',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em'
+                }}>
+                  Kinetic Workspace
+                </span>
+              </div>
             </div>
+
+            {/* Mobile Close Button */}
+            {isMobileOpen && (
+              <button
+                type="button"
+                onClick={() => setIsMobileOpen(false)}
+                className="p-1 text-slate-500 hover:text-slate-900 lg:hidden"
+                aria-label="Close navigation menu"
+              >
+                <X size={22} />
+              </button>
+            )}
           </div>
 
           {/* Navigation Stream Links */}

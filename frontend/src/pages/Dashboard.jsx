@@ -119,11 +119,7 @@ const Dashboard = () => {
       </motion.div>
 
       {/* B. Project Pulse & Task Metrics Overview Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-        gap: '1.25rem'
-      }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Metric 1: Total Projects */}
         <motion.div
           whileHover={{ y: -3 }}
@@ -208,11 +204,7 @@ const Dashboard = () => {
 
 
       {/* D & E. Two Column Layout: Recent Projects + Urgent Tasks */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-        gap: '1.5rem'
-      }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* D. Recent Projects Stream */}
         <div className="kinetic-card" style={{ padding: '1.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>

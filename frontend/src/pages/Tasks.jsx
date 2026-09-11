@@ -111,62 +111,45 @@ const Tasks = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      {/* Top Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '1rem'
-      }}>
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
             <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)' }}>
-              Workflow Task Stream
+              Task Stream Board
             </h1>
             <span style={{
               fontSize: '0.8125rem',
               fontWeight: 700,
               padding: '0.2rem 0.625rem',
               borderRadius: 'var(--radius-full)',
-              backgroundColor: 'var(--primary-light)',
-              color: 'var(--primary)'
+              backgroundColor: 'var(--secondary-light)',
+              color: 'var(--secondary)'
             }}>
-              {tasks.length} Nodes Total
+              {tasks.length} Nodes
             </span>
           </div>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.125rem' }}>
-            Track task progression through kinetic execution stages.
+          <p style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '0.125rem' }}>
+            Interactive workflow pipeline for node state tracking and execution.
           </p>
         </div>
 
-        <button onClick={handleCreateNew} className="btn btn-primary" style={{ gap: '0.5rem' }}>
-          <Plus size={16} />
+        <button onClick={handleCreateNew} className="btn btn-primary w-full sm:w-auto" style={{ gap: '0.5rem', fontWeight: 700 }}>
+          <Plus size={18} />
           <span>Insert Task Node</span>
         </button>
       </div>
 
       {/* Search & Filter Bar */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '1rem',
-        padding: '1rem 1.25rem',
-        backgroundColor: 'var(--bg-surface)',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-subtle)',
-        boxShadow: 'var(--shadow-sm)'
-      }}>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
         {/* Search */}
-        <div style={{ position: 'relative', flex: 1, minWidth: '240px' }}>
+        <div style={{ position: 'relative', flex: 1, width: '100%', minWidth: 0 }}>
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search task nodes by name or criteria..."
-            className="form-input"
+            className="form-input w-full"
             style={{ paddingLeft: '2.5rem', paddingRight: searchQuery ? '2rem' : '0.875rem' }}
           />
           <Search size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
@@ -180,41 +163,45 @@ const Tasks = () => {
           )}
         </div>
 
-        {/* Status Filter */}
-        <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
-          {['All', 'Pending', 'In Progress', 'Completed'].map((status) => (
-            <button
-              key={status}
-              onClick={() => setStatusFilter(status)}
-              style={{
-                padding: '0.4rem 0.75rem',
-                fontSize: '0.8125rem',
-                fontWeight: statusFilter === status ? 600 : 500,
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid',
-                borderColor: statusFilter === status ? 'var(--primary)' : 'var(--border-subtle)',
-                backgroundColor: statusFilter === status ? 'var(--primary-light)' : 'transparent',
-                color: statusFilter === status ? 'var(--primary)' : 'var(--text-secondary)',
-                cursor: 'pointer'
-              }}
-            >
-              {status}
-            </button>
-          ))}
-        </div>
+        {/* Filter Controls Wrapper */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {/* Status Filter Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0">
+            {['All', 'Pending', 'In Progress', 'Completed'].map((status) => (
+              <button
+                key={status}
+                onClick={() => setStatusFilter(status)}
+                style={{
+                  padding: '0.4rem 0.75rem',
+                  fontSize: '0.8125rem',
+                  fontWeight: statusFilter === status ? 700 : 500,
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid',
+                  borderColor: statusFilter === status ? 'var(--primary)' : 'var(--border-subtle)',
+                  backgroundColor: statusFilter === status ? 'var(--primary-light)' : 'transparent',
+                  color: statusFilter === status ? 'var(--primary)' : 'var(--text-secondary)',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                {status}
+              </button>
+            ))}
+          </div>
 
-        {/* Priority Filter Select */}
-        <div style={{ minWidth: '160px' }}>
-          <CustomSelect
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
-            options={[
-              { value: 'All', label: 'All Priorities' },
-              { value: 'High', label: 'High Priority' },
-              { value: 'Medium', label: 'Medium Priority' },
-              { value: 'Low', label: 'Low Priority' }
-            ]}
-          />
+          {/* Priority Filter Select */}
+          <div className="w-full sm:w-auto min-w-[160px]">
+            <CustomSelect
+              value={priorityFilter}
+              onChange={(e) => setPriorityFilter(e.target.value)}
+              options={[
+                { value: 'All', label: 'All Priorities' },
+                { value: 'High', label: 'High Priority' },
+                { value: 'Medium', label: 'Medium Priority' },
+                { value: 'Low', label: 'Low Priority' }
+              ]}
+            />
+          </div>
         </div>
       </div>
 
@@ -229,12 +216,7 @@ const Tasks = () => {
           onAction={searchQuery || statusFilter !== 'All' ? null : handleCreateNew}
         />
       ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '1.5rem',
-          alignItems: 'start'
-        }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
           {streamColumns.map((col) => {
             const columnTasks = filteredTasks.filter(t => t.status === col.status);
             const Icon = col.icon;

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ==========================================================================
    TaskFlow — Kinetic Workspace Premium Design System & Global Styles
    ========================================================================== */
@@ -375,5 +379,30 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Responsive Global Layout Rules */
+@media (max-width: 1023px) {
+  .mobile-header {
+    display: flex !important;
+  }
+
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    transform: translateX(-100%);
+    z-index: 100 !important;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0) !important;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
+  }
+
+  .auth-brand-col {
+    display: none !important;
   }
 }

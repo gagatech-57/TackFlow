@@ -119,21 +119,21 @@ const ProjectDetails = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       {/* Back button & Action Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
           onClick={() => navigate('/projects')}
-          className="btn btn-ghost"
-          style={{ gap: '0.5rem', paddingLeft: 0, color: 'var(--text-secondary)' }}
+          className="btn btn-ghost self-start"
+          style={{ gap: '0.5rem', paddingLeft: 0, color: 'var(--text-secondary)', fontWeight: 700 }}
         >
           <ArrowLeft size={18} />
           <span>Back to Projects</span>
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
           <button
             onClick={() => setIsProjectModalOpen(true)}
-            className="btn btn-secondary"
-            style={{ gap: '0.5rem' }}
+            className="btn btn-secondary flex-1 sm:flex-initial"
+            style={{ gap: '0.5rem', fontWeight: 700 }}
           >
             <Edit size={16} />
             <span>Edit Project</span>
@@ -144,10 +144,10 @@ const ProjectDetails = () => {
               setEditingTask(null);
               setIsTaskModalOpen(true);
             }}
-            className="btn btn-primary"
-            style={{ gap: '0.5rem' }}
+            className="btn btn-primary flex-1 sm:flex-initial"
+            style={{ gap: '0.5rem', fontWeight: 700 }}
           >
-            <Plus size={16} />
+            <Plus size={18} />
             <span>Add Task Node</span>
           </button>
         </div>
@@ -157,24 +157,23 @@ const ProjectDetails = () => {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="kinetic-card"
-        style={{ padding: '2rem' }}
+        className="kinetic-card p-6 sm:p-8"
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-5">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.375rem' }}>
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
               <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: 'var(--text-main)' }}>
                 {project.name}
               </h1>
               <StatusBadge status={project.status} />
             </div>
-            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', maxWidth: '720px' }}>
+            <p style={{ fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-secondary)', maxWidth: '720px' }}>
               {project.description || 'No description provided.'}
             </p>
           </div>
 
-          <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>STREAM COMPLETION</span>
+          <div className="md:text-right">
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>STREAM COMPLETION</span>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '2rem', fontWeight: 800, color: 'var(--primary)' }}>
               {progressPct}%
             </div>
