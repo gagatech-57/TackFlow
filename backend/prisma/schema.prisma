@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  fullName  String    @map("full_name") @db.VarChar(100)
+  email     String    @unique @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  projects  Project[]
+  tasks     Task[]
+
+  @@map("users")
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @map("user_id")
+  name        String    @db.VarChar(150)
+  description String?   @db.Text
+  status      String    @default("Not Started") @db.VarChar(20)
+  startDate   DateTime? @map("start_date") @db.Date
+  endDate     DateTime? @map("end_date") @db.Date
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks Task[]
+
+  @@map("projects")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  projectId   Int       @map("project_id")
+  userId      Int       @map("user_id")
+  name        String    @db.VarChar(150)
+  description String?   @db.Text
+  priority    String    @default("Medium") @db.VarChar(10)
+  status      String    @default("Pending") @db.VarChar(20)
+  dueDate     DateTime? @map("due_date") @db.Date
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tasks")
+}
