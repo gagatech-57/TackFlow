@@ -225,54 +225,7 @@ const Dashboard = () => {
         </motion.div>
       </div>
 
-      {/* C. Project Pulse Visual Progress Ring & Stream Card */}
-      <div className="kinetic-card" style={{ padding: '1.75rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-          <div>
-            <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-main)' }}>
-              Overall Project Flow Progress
-            </h3>
-            <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)' }}>
-              Aggregated completion momentum across active task streams
-            </p>
-          </div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.25rem', fontWeight: 800, color: 'var(--primary)' }}>
-            {taskCompletionRate}%
-          </span>
-        </div>
 
-        {/* Dynamic Progress Bar */}
-        <div style={{
-          height: '10px',
-          width: '100%',
-          backgroundColor: '#e2e8f0',
-          borderRadius: '5px',
-          overflow: 'hidden',
-          marginBottom: '1rem'
-        }}>
-          <motion.div
-            initial={{ width: '0%' }}
-            animate={{ width: `${taskCompletionRate}%` }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              height: '100%',
-              background: 'linear-gradient(90deg, #2563eb 0%, #0d9488 50%, #10b981 100%)',
-              borderRadius: '5px'
-            }}
-          />
-        </div>
-
-        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontSize: '0.8125rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10b981' }} />
-            <span style={{ color: 'var(--text-secondary)' }}>Completed: {metrics.completedTasks}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#2563eb' }} />
-            <span style={{ color: 'var(--text-secondary)' }}>Pending & In-Progress: {metrics.pendingTasks}</span>
-          </div>
-        </div>
-      </div>
 
       {/* D & E. Two Column Layout: Recent Projects + Urgent Tasks */}
       <div style={{
