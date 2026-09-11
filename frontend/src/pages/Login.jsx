@@ -184,26 +184,34 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Right Column — Form */}
+      {/* Right Column — Elevated Kinetic Form Card */}
       <div style={{
         flex: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '2.5rem',
-        backgroundColor: 'var(--bg-app)'
+        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
       }}>
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          style={{ width: '100%', maxWidth: '420px' }}
+          style={{
+            width: '100%',
+            maxWidth: '440px',
+            backgroundColor: '#ffffff',
+            borderRadius: '20px',
+            border: '1px solid rgba(226, 232, 240, 0.9)',
+            boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.03)',
+            padding: '2.75rem 2.5rem'
+          }}
         >
           <div style={{ marginBottom: '2rem' }}>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.375rem' }}>
+            <h2 style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.375rem', letterSpacing: '-0.02em' }}>
               Welcome back
             </h2>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+            <p style={{ fontSize: '0.9rem', fontWeight: 600, color: '#475569' }}>
               Sign in to access your project pulse and active tasks.
             </p>
           </div>
@@ -219,6 +227,7 @@ const Login = () => {
                 borderRadius: 'var(--radius-md)',
                 color: '#b91c1c',
                 fontSize: '0.84rem',
+                fontWeight: 600,
                 marginBottom: '1.25rem'
               }}
             >
@@ -228,7 +237,9 @@ const Login = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="form-label" htmlFor="email">Email Address</label>
+              <label className="form-label" htmlFor="email" style={{ fontWeight: 700, color: '#0f172a' }}>
+                Email Address
+              </label>
               <div style={{ position: 'relative' }}>
                 <input
                   id="email"
@@ -238,7 +249,7 @@ const Login = () => {
                   onChange={handleChange}
                   placeholder="Enter your email"
                   className="form-input"
-                  style={{ paddingLeft: '2.5rem' }}
+                  style={{ paddingLeft: '2.5rem', fontWeight: 600 }}
                   required
                 />
                 <Mail size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
@@ -246,7 +257,9 @@ const Login = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="password">Password</label>
+              <label className="form-label" htmlFor="password" style={{ fontWeight: 700, color: '#0f172a' }}>
+                Password
+              </label>
               <div style={{ position: 'relative' }}>
                 <input
                   id="password"
@@ -256,7 +269,7 @@ const Login = () => {
                   onChange={handleChange}
                   placeholder="Enter your password"
                   className="form-input"
-                  style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}
+                  style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem', fontWeight: 600 }}
                   required
                 />
                 <Lock size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
@@ -285,16 +298,18 @@ const Login = () => {
               className="btn btn-primary"
               style={{
                 width: '100%',
-                padding: '0.75rem',
+                padding: '0.8rem',
                 fontSize: '0.95rem',
-                marginTop: '0.75rem'
+                fontWeight: 700,
+                marginTop: '0.75rem',
+                borderRadius: 'var(--radius-md)'
               }}
             >
               {submitting ? (
                 <KineticLoader color="white" text="Signing in..." />
               ) : (
                 <>
-                  <span>Sign in to TaskFlow</span>
+                  <span style={{ fontWeight: 700 }}>Sign in to TaskFlow</span>
                   <ArrowRight size={16} />
                 </>
               )}
@@ -305,10 +320,11 @@ const Login = () => {
             marginTop: '2rem',
             textAlign: 'center',
             fontSize: '0.875rem',
-            color: 'var(--text-secondary)'
+            fontWeight: 600,
+            color: '#475569'
           }}>
             Don't have an account?{' '}
-            <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>
+            <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 700, textDecoration: 'none' }}>
               Create an account
             </Link>
           </div>

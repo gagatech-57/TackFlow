@@ -109,13 +109,10 @@ const Dashboard = () => {
         }}
       >
         <div>
-          <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--primary)' }}>
-            WORKSPACE PULSE DASHBOARD
-          </span>
-          <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: 'var(--text-main)', marginTop: '0.125rem' }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.025em' }}>
             {getGreeting()}, {(user?.name || user?.fullName) ? (user.name || user.fullName).split(' ')[0] : 'Workspace Member'} 👋
           </h1>
-          <p style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)' }}>
+          <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
             Here is the current momentum and flow state of your projects.
           </p>
         </div>
@@ -125,17 +122,17 @@ const Dashboard = () => {
           <button
             onClick={() => setIsTaskModalOpen(true)}
             className="btn btn-secondary"
-            style={{ gap: '0.5rem' }}
+            style={{ gap: '0.5rem', fontWeight: 700 }}
           >
-            <PlusCircle size={16} style={{ color: '#2563eb' }} />
+            <PlusCircle size={18} style={{ color: '#2563eb' }} />
             <span>Add Task</span>
           </button>
           <button
             onClick={() => setIsProjectModalOpen(true)}
             className="btn btn-primary"
-            style={{ gap: '0.5rem' }}
+            style={{ gap: '0.5rem', fontWeight: 700 }}
           >
-            <FolderPlus size={16} />
+            <FolderPlus size={18} />
             <span>Ignite Project</span>
           </button>
         </div>
