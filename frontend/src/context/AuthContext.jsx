@@ -30,30 +30,57 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  const login = async (credentials) => {
-    const res = await authService.login(credentials);
-    const { user: userData, token: jwtToken } = res.data;
-    localStorage.setItem('taskflow_token', jwtToken);
-    localStorage.setItem('taskflow_user', JSON.stringify(userData));
-    setUser(userData);
-    setToken(jwtToken);
-    return res;
+  const login = async (email, password) => {
+    try {
+      const credentials = typeof email === 'object' ? email : { email, password };
+      const res = await authService.login(credentials);
+      const { user: userData, token: jwtToken } = res.data;
+
+      localStorage.setItem('taskflow_token', jwtToken);
+      localStorage.setItem('taskflow_user', JSON.stringify(userData));
+      setUser(userData);
+      setToken(jwtToken);
+      return { success: true, data: res.data };
+    } catch (err) {
+      console.error('AuthContext login error:', err);
+      return {
+        success: false,
+        message: err.message || 'Invalid email or password.'
+      };
+    }
   };
 
-  const register = async (data) => {
-    const res = await authService.register(data);
-    const { user: userData, token: jwtToken } = res.data;
-    localStorage.setItem('taskflow_token', jwtToken);
-    localStorage.setItem('taskflow_user', JSON.stringify(userData));
-    setUser(userData);
-    setToken(jwtToken);
-    return res;
+  const register = async (name, email, password) => {
+    try {
+      const payload = typeof name === 'object' ? name : { name, email, password };
+      const res = await authService.register(payload);
+      const { user: userData, token: jwtToken } = res.data;
+
+      localStorage.setItem('taskflow_token', jwtToken);
+      localStorage.setItem('taskflow_user', JSON.stringify(userData));
+      setUser(userData);
+      setToken(jwtToken);
+      return { success: true, data: res.data };
+    } catch (err) {
+      console.error('AuthContext register error:', err);
+      return {
+        success: false,
+        message: err.message || 'Registration failed.'
+      };
+    }
   };
 
   const logout = async () => {
-    await authService.logout();
-    setUser(null);
-    setToken(null);
+    try {
+      await authService.logout();
+    } catch (e) {
+      // Ignore network error on logout
+    } finally {
+      localStorage.removeItem('taskflow_token');
+      localStorage.removeItem('taskflow_user');
+      setUser(null);
+      setToken(null);
+    }
   };
 
   return (

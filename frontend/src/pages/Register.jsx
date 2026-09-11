@@ -58,13 +58,17 @@ const Register = () => {
     setSubmitting(true);
     setError('');
 
-    const res = await register(formData.name, formData.email, formData.password);
-    setSubmitting(false);
-
-    if (res.success) {
-      navigate('/dashboard');
-    } else {
-      setError(res.message || 'Registration failed. Please try again.');
+    try {
+      const res = await register(formData.name, formData.email, formData.password);
+      if (res.success) {
+        navigate('/dashboard');
+      } else {
+        setError(res.message || 'Registration failed. Please try again.');
+      }
+    } catch (err) {
+      setError(err.message || 'Unable to complete registration.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -325,7 +329,7 @@ const Register = () => {
               }}
             >
               {submitting ? (
-                <KineticLoader size="small" text={null} />
+                <KineticLoader color="white" text="Creating account..." />
               ) : (
                 <>
                   <span>Create Account</span>

@@ -29,13 +29,17 @@ const Login = () => {
     setSubmitting(true);
     setError('');
 
-    const res = await login(formData.email, formData.password);
-    setSubmitting(false);
-
-    if (res.success) {
-      navigate('/dashboard');
-    } else {
-      setError(res.message || 'Invalid email or password.');
+    try {
+      const res = await login(formData.email, formData.password);
+      if (res.success) {
+        navigate('/dashboard');
+      } else {
+        setError(res.message || 'Invalid email or password.');
+      }
+    } catch (err) {
+      setError(err.message || 'Unable to connect to authentication service.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -287,7 +291,7 @@ const Login = () => {
               }}
             >
               {submitting ? (
-                <KineticLoader size="small" text={null} />
+                <KineticLoader color="white" text="Signing in..." />
               ) : (
                 <>
                   <span>Sign in to TaskFlow</span>
