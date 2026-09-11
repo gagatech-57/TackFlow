@@ -44,20 +44,26 @@ const Dashboard = () => {
         taskService.getTasks()
       ]);
 
-      if (metricsRes.data.success) {
-        setMetrics(metricsRes.data.data);
+      const metricsData = metricsRes?.data || metricsRes;
+      if (metricsData && typeof metricsData === 'object') {
+        setMetrics({
+          totalProjects: metricsData.totalProjects || 0,
+          projectsInProgress: metricsData.projectsInProgress || 0,
+          totalTasks: metricsData.totalTasks || 0,
+          completedTasks: metricsData.completedTasks || 0,
+          pendingTasks: metricsData.pendingTasks || 0
+        });
       }
-      if (projectsRes.data.success) {
-        setRecentProjects(projectsRes.data.data.slice(0, 4));
-      }
-      if (tasksRes.data.success) {
-        // Filter urgent tasks: Pending or In Progress with high priority or near due date
-        const urgent = tasksRes.data.data
-          .filter(t => t.status !== 'Completed')
-          .sort((a, b) => (a.priority === 'High' ? -1 : 1))
-          .slice(0, 5);
-        setUrgentTasks(urgent);
-      }
+
+      const projList = Array.isArray(projectsRes) ? projectsRes : (projectsRes?.data || []);
+      setRecentProjects(projList.slice(0, 4));
+
+      const tasksList = Array.isArray(tasksRes) ? tasksRes : (tasksRes?.data || []);
+      const urgent = tasksList
+        .filter(t => t.status !== 'Completed')
+        .sort((a, b) => (a.priority === 'High' ? -1 : 1))
+        .slice(0, 5);
+      setUrgentTasks(urgent);
     } catch (err) {
       console.error('Failed to load dashboard data', err);
     } finally {
@@ -300,7 +306,7 @@ const Dashboard = () => {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
               {recentProjects.map((project) => {
-                const total = project.tasks ? project.tasks.length : 0;
+                const total = project.tasks ? project.tasks.length : (project._count ? project._count.tasks : 0);
                 const completed = project.tasks ? project.tasks.filter(t => t.status === 'Completed').length : 0;
                 const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 

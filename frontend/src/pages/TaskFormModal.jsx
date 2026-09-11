@@ -39,8 +39,11 @@ const TaskFormModal = ({
   const loadProjects = async () => {
     try {
       const res = await projectService.getProjects();
-      if (res.data.success) {
-        setProjects(res.data.data);
+      const list = res.data || res;
+      if (Array.isArray(list)) {
+        setProjects(list);
+      } else if (res.success && Array.isArray(res.data)) {
+        setProjects(res.data);
       }
     } catch (err) {
       console.error('Failed to load projects list for task modal', err);
@@ -107,20 +110,24 @@ const TaskFormModal = ({
 
       setLoading(false);
 
-      if (response.data.success) {
+      const isSuccess = response && (response.success || response.status === 200 || response.status === 201 || Boolean(response.data));
+      const savedData = response.data || response;
+
+      if (isSuccess) {
         setSuccessAnimation(true);
         showToast(taskToEdit ? 'Task node updated!' : 'Task node inserted into stream!', 'success');
 
         setTimeout(() => {
-          onTaskSaved && onTaskSaved(response.data.data);
+          onTaskSaved && onTaskSaved(savedData);
           onClose();
         }, 1000);
       } else {
-        setError(response.data.message || 'Failed to save task.');
+        setError(response?.message || 'Failed to save task.');
       }
     } catch (err) {
       setLoading(false);
-      setError(err.response?.data?.message || 'An error occurred while saving task node.');
+      const errMsg = err.message || (Array.isArray(err.errors) ? err.errors.map(e => e.msg).join(' ') : 'An error occurred while saving task node.');
+      setError(errMsg);
     }
   };
 
@@ -300,7 +307,7 @@ const TaskFormModal = ({
                 disabled={loading}
               >
                 {loading ? (
-                  <KineticLoader size="small" text={null} />
+                  <KineticLoader color="white" text="Inserting..." />
                 ) : (
                   <>
                     <Plus size={16} />

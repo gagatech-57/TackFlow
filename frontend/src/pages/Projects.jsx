@@ -34,9 +34,8 @@ const Projects = () => {
     setLoading(true);
     try {
       const res = await projectService.getProjects();
-      if (res.data.success) {
-        setProjects(res.data.data);
-      }
+      const list = Array.isArray(res) ? res : (res?.data || []);
+      setProjects(list);
     } catch (err) {
       console.error('Failed to fetch projects', err);
       showToast('Failed to load project streams', 'error');
@@ -67,7 +66,8 @@ const Projects = () => {
     setDeleting(true);
     try {
       const res = await projectService.deleteProject(projectToDelete.id);
-      if (res.data.success) {
+      const isSuccess = res && (res.success || res.status === 200);
+      if (isSuccess) {
         showToast('Project stream removed', 'info');
         setProjects(projects.filter(p => p.id !== projectToDelete.id));
         setDeleteModalOpen(false);
@@ -189,7 +189,7 @@ const Projects = () => {
       {/* Projects Grid */}
       {loading ? (
         <div style={{ padding: '4rem 0', display: 'flex', justifyContent: 'center' }}>
-          <KineticLoader size="medium" text="Loading project streams..." />
+          <KineticLoader size="large" text="Loading project streams..." />
         </div>
       ) : filteredProjects.length === 0 ? (
         <EmptyState
@@ -207,7 +207,7 @@ const Projects = () => {
         >
           <AnimatePresence>
             {filteredProjects.map((project) => {
-              const totalTasks = project.tasks ? project.tasks.length : 0;
+              const totalTasks = project.tasks ? project.tasks.length : (project._count ? project._count.tasks : 0);
               const completedTasks = project.tasks ? project.tasks.filter(t => t.status === 'Completed').length : 0;
               const progressPct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
@@ -346,7 +346,7 @@ const Projects = () => {
             className="btn btn-danger"
             disabled={deleting}
           >
-            {deleting ? <KineticLoader size="small" text={null} /> : 'Delete Stream'}
+            {deleting ? <KineticLoader color="white" text="Deleting..." /> : 'Delete Stream'}
           </button>
         </div>
       </Modal>

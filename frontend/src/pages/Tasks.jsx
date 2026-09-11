@@ -33,9 +33,8 @@ const Tasks = () => {
     setLoading(true);
     try {
       const res = await taskService.getTasks();
-      if (res.data.success) {
-        setTasks(res.data.data);
-      }
+      const list = Array.isArray(res) ? res : (res?.data || []);
+      setTasks(list);
     } catch (err) {
       console.error('Failed to load tasks', err);
       showToast('Failed to load task stream', 'error');
@@ -64,7 +63,8 @@ const Tasks = () => {
     setDeleting(true);
     try {
       const res = await taskService.deleteTask(taskToDelete.id);
-      if (res.data.success) {
+      const isSuccess = res && (res.success || res.status === 200);
+      if (isSuccess) {
         showToast('Task node removed', 'info');
         setTasks(tasks.filter(t => t.id !== taskToDelete.id));
         setDeleteModalOpen(false);
@@ -76,16 +76,15 @@ const Tasks = () => {
     }
   };
 
-  // Requirement 14: Task completion kinetic animation and live stream update
   const handleToggleComplete = async (task) => {
     const isCompleted = task.status === 'Completed';
     const nextStatus = isCompleted ? 'Pending' : 'Completed';
 
     try {
       const res = await taskService.updateTask(task.id, { status: nextStatus });
-      if (res.data.success) {
+      const isSuccess = res && (res.success || res.status === 200);
+      if (isSuccess) {
         showToast(nextStatus === 'Completed' ? 'Task node resolved! Workflow advanced.' : 'Task returned to pending', 'success');
-        // Optimistic UI state update
         setTasks(tasks.map(t => t.id === task.id ? { ...t, status: nextStatus } : t));
       }
     } catch (err) {
@@ -102,7 +101,6 @@ const Tasks = () => {
     return matchesSearch && matchesStatus && matchesPriority;
   });
 
-  // Group tasks into workflow streams: Pending, In Progress, Completed
   const streamColumns = [
     { title: 'PENDING STREAMS', status: 'Pending', icon: Circle, color: '#d97706', bg: '#fffbeb' },
     { title: 'IN PROGRESS', status: 'In Progress', icon: Clock, color: '#2563eb', bg: '#eff6ff' },
@@ -220,7 +218,7 @@ const Tasks = () => {
       {/* Task Streams Workflow Board */}
       {loading ? (
         <div style={{ padding: '4rem 0', display: 'flex', justifyContent: 'center' }}>
-          <KineticLoader size="medium" text="Syncing Task Stream..." />
+          <KineticLoader size="large" text="Syncing Task Stream..." />
         </div>
       ) : filteredTasks.length === 0 ? (
         <EmptyState
@@ -427,7 +425,7 @@ const Tasks = () => {
             Cancel
           </button>
           <button onClick={handleDelete} className="btn btn-danger" disabled={deleting}>
-            {deleting ? <KineticLoader size="small" text={null} /> : 'Delete Node'}
+            {deleting ? <KineticLoader color="white" text="Deleting..." /> : 'Delete Node'}
           </button>
         </div>
       </Modal>

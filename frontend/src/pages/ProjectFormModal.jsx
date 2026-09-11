@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Layers, Calendar, CheckCircle2, Plus } from 'lucide-react';
+import { CheckCircle2, Plus } from 'lucide-react';
 import Modal from '../components/common/Modal';
 import KineticLoader from '../components/common/KineticLoader';
 import { projectService } from '../services/projectService';
@@ -68,21 +68,25 @@ const ProjectFormModal = ({ isOpen, onClose, projectToEdit = null, onProjectSave
 
       setLoading(false);
 
-      if (response.data.success) {
+      const isSuccess = response && (response.success || response.status === 200 || response.status === 201 || Boolean(response.data));
+      const savedData = response.data || response;
+
+      if (isSuccess) {
         setSuccessAnimation(true);
         showToast(projectToEdit ? 'Project updated successfully!' : 'Project stream ignited!', 'success');
 
         // Play Kinetic Success Animation before closing
         setTimeout(() => {
-          onProjectSaved && onProjectSaved(response.data.data);
+          onProjectSaved && onProjectSaved(savedData);
           onClose();
         }, 1200);
       } else {
-        setError(response.data.message || 'Failed to save project.');
+        setError(response?.message || 'Failed to save project.');
       }
     } catch (err) {
       setLoading(false);
-      setError(err.response?.data?.message || 'An error occurred while saving project.');
+      const errMsg = err.message || (Array.isArray(err.errors) ? err.errors.map(e => e.msg).join(' ') : 'An error occurred while saving project.');
+      setError(errMsg);
     }
   };
 
@@ -256,7 +260,7 @@ const ProjectFormModal = ({ isOpen, onClose, projectToEdit = null, onProjectSave
                 disabled={loading}
               >
                 {loading ? (
-                  <KineticLoader size="small" text={null} />
+                  <KineticLoader color="white" text="Saving..." />
                 ) : (
                   <>
                     <Plus size={16} />

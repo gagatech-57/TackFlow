@@ -44,12 +44,13 @@ const ProjectDetails = () => {
         taskService.getTasks({ projectId: id })
       ]);
 
-      if (projRes.data.success) {
-        setProject(projRes.data.data);
+      const projData = projRes?.data || projRes;
+      if (projData && projData.id) {
+        setProject(projData);
       }
-      if (tasksRes.data.success) {
-        setTasks(tasksRes.data.data);
-      }
+
+      const tasksList = Array.isArray(tasksRes) ? tasksRes : (tasksRes?.data || []);
+      setTasks(tasksList);
     } catch (err) {
       console.error('Failed to load project details', err);
       showToast('Unable to load project stream details', 'error');
@@ -62,7 +63,8 @@ const ProjectDetails = () => {
     const nextStatus = task.status === 'Completed' ? 'Pending' : 'Completed';
     try {
       const res = await taskService.updateTask(task.id, { status: nextStatus });
-      if (res.data.success) {
+      const isSuccess = res && (res.success || res.status === 200);
+      if (isSuccess) {
         showToast(nextStatus === 'Completed' ? 'Task node resolved!' : 'Task set to pending', 'success');
         loadProjectAndTasks();
       }
@@ -76,7 +78,8 @@ const ProjectDetails = () => {
     setDeletingTask(true);
     try {
       const res = await taskService.deleteTask(taskToDelete.id);
-      if (res.data.success) {
+      const isSuccess = res && (res.success || res.status === 200);
+      if (isSuccess) {
         showToast('Task node removed from stream', 'info');
         setTasks(tasks.filter(t => t.id !== taskToDelete.id));
         setDeleteTaskModalOpen(false);
@@ -360,7 +363,7 @@ const ProjectDetails = () => {
             Cancel
           </button>
           <button onClick={handleTaskDelete} className="btn btn-danger" disabled={deletingTask}>
-            {deletingTask ? <KineticLoader size="small" text={null} /> : 'Delete Node'}
+            {deletingTask ? <KineticLoader color="white" text="Deleting..." /> : 'Delete Node'}
           </button>
         </div>
       </Modal>
