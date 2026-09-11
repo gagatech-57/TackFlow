@@ -1,12 +1,16 @@
 const { body } = require('express-validator');
 
 const registerValidation = [
-  body('fullName')
-    .trim()
-    .notEmpty()
-    .withMessage('Full Name is required.')
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Full Name must be between 2 and 100 characters.'),
+  body().custom((value, { req }) => {
+    const name = req.body.fullName || req.body.name;
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      throw new Error('Full Name is required.');
+    }
+    if (name.trim().length < 2 || name.trim().length > 100) {
+      throw new Error('Full Name must be between 2 and 100 characters.');
+    }
+    return true;
+  }),
   body('email')
     .trim()
     .notEmpty()

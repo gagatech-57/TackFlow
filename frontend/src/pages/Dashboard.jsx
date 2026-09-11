@@ -107,7 +107,7 @@ const Dashboard = () => {
             WORKSPACE PULSE DASHBOARD
           </span>
           <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: 'var(--text-main)', marginTop: '0.125rem' }}>
-            {getGreeting()}, {user?.name ? user.name.split(' ')[0] : 'Workspace Member'} 👋
+            {getGreeting()}, {(user?.name || user?.fullName) ? (user.name || user.fullName).split(' ')[0] : 'Workspace Member'} 👋
           </h1>
           <p style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)' }}>
             Here is the current momentum and flow state of your projects.

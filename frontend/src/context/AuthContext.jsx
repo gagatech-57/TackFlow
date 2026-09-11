@@ -14,7 +14,9 @@ export const AuthProvider = ({ children }) => {
       if (storedToken) {
         try {
           const res = await authService.getMe();
-          setUser(res.data.user);
+          const fetchedUser = res.data?.user || res.data;
+          const userWithHelpers = fetchedUser ? { ...fetchedUser, name: fetchedUser.fullName || fetchedUser.name } : null;
+          setUser(userWithHelpers);
           setToken(storedToken);
         } catch (err) {
           console.error('Failed to restore session:', err);
@@ -30,42 +32,67 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
+  const formatErrorMsg = (err) => {
+    if (err && Array.isArray(err.errors) && err.errors.length > 0) {
+      return err.errors.map(e => e.msg || e.message || e).join(' ');
+    }
+    return err?.message || 'Request failed. Please try again.';
+  };
+
   const login = async (email, password) => {
     try {
       const credentials = typeof email === 'object' ? email : { email, password };
       const res = await authService.login(credentials);
-      const { user: userData, token: jwtToken } = res.data;
+      const { user: userData, token: jwtToken } = res.data || res;
+      const userWithHelpers = { ...userData, name: userData.fullName || userData.name };
 
       localStorage.setItem('taskflow_token', jwtToken);
-      localStorage.setItem('taskflow_user', JSON.stringify(userData));
-      setUser(userData);
+      localStorage.setItem('taskflow_user', JSON.stringify(userWithHelpers));
+      setUser(userWithHelpers);
       setToken(jwtToken);
-      return { success: true, data: res.data };
+      return { success: true, data: res.data || res };
     } catch (err) {
       console.error('AuthContext login error:', err);
       return {
         success: false,
-        message: err.message || 'Invalid email or password.'
+        message: formatErrorMsg(err)
       };
     }
   };
 
   const register = async (name, email, password) => {
     try {
-      const payload = typeof name === 'object' ? name : { name, email, password };
+      let payload;
+      if (typeof name === 'object') {
+        payload = {
+          fullName: name.fullName || name.name,
+          name: name.fullName || name.name,
+          email: name.email,
+          password: name.password
+        };
+      } else {
+        payload = {
+          fullName: name,
+          name: name,
+          email: email,
+          password: password
+        };
+      }
+
       const res = await authService.register(payload);
-      const { user: userData, token: jwtToken } = res.data;
+      const { user: userData, token: jwtToken } = res.data || res;
+      const userWithHelpers = { ...userData, name: userData.fullName || userData.name };
 
       localStorage.setItem('taskflow_token', jwtToken);
-      localStorage.setItem('taskflow_user', JSON.stringify(userData));
-      setUser(userData);
+      localStorage.setItem('taskflow_user', JSON.stringify(userWithHelpers));
+      setUser(userWithHelpers);
       setToken(jwtToken);
-      return { success: true, data: res.data };
+      return { success: true, data: res.data || res };
     } catch (err) {
       console.error('AuthContext register error:', err);
       return {
         success: false,
-        message: err.message || 'Registration failed.'
+        message: formatErrorMsg(err)
       };
     }
   };

@@ -197,7 +197,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
                 fontSize: '0.9rem',
                 boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)'
               }}>
-                {user?.name ? user.name.charAt(0).toUpperCase() : <User size={18} />}
+                {(user?.name || user?.fullName) ? (user.name || user.fullName).charAt(0).toUpperCase() : <User size={18} />}
               </div>
               <div style={{
                 position: 'absolute',
@@ -220,7 +220,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap'
               }}>
-                {user?.name || 'Workspace User'}
+                {user?.name || user?.fullName || 'Workspace User'}
               </div>
               <div style={{
                 fontSize: '0.75rem',
