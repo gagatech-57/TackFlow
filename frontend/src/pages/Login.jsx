@@ -236,7 +236,7 @@ const Login = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="name@company.com"
+                  placeholder="Enter your email"
                   className="form-input"
                   style={{ paddingLeft: '2.5rem' }}
                   required
@@ -254,7 +254,7 @@ const Login = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   className="form-input"
                   style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}
                   required

@@ -221,7 +221,7 @@ const Register = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Guna Sekhar"
+                  placeholder="Enter your name"
                   className="form-input"
                   style={{ paddingLeft: '2.5rem' }}
                   required
@@ -239,7 +239,7 @@ const Register = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="guna@company.com"
+                  placeholder="Enter your email"
                   className="form-input"
                   style={{ paddingLeft: '2.5rem' }}
                   required
@@ -257,7 +257,7 @@ const Register = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="At least 6 characters"
+                  placeholder="Enter your password"
                   className="form-input"
                   style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}
                   required
