@@ -120,7 +120,7 @@ const TaskFormModal = ({
         setTimeout(() => {
           onTaskSaved && onTaskSaved(savedData);
           onClose();
-        }, 1000);
+        }, 400);
       } else {
         setError(response?.message || 'Failed to save task.');
       }

@@ -79,7 +79,7 @@ const ProjectFormModal = ({ isOpen, onClose, projectToEdit = null, onProjectSave
         setTimeout(() => {
           onProjectSaved && onProjectSaved(savedData);
           onClose();
-        }, 1200);
+        }, 400);
       } else {
         setError(response?.message || 'Failed to save project.');
       }
