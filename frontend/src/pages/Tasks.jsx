@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, CheckCircle2, Clock, Circle, Calendar, Edit, Trash2, X } from 'lucide-react';
+import { Search, Plus, CheckCircle2, Check, Clock, Circle, Calendar, Edit, Trash2, X } from 'lucide-react';
 import { taskService } from '../services/taskService';
 import StatusBadge, { PriorityBadge } from '../components/common/Badge';
 import KineticLoader from '../components/common/KineticLoader';
@@ -390,6 +390,29 @@ const Tasks = () => {
                               </span>
 
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flexShrink: 0 }}>
+                                {!isCompleted && (
+                                  <button
+                                    onClick={() => handleToggleComplete(task)}
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '0.25rem',
+                                      padding: '0.2rem 0.5rem',
+                                      borderRadius: '6px',
+                                      backgroundColor: '#ecfdf5',
+                                      color: '#047857',
+                                      border: '1px solid #a7f3d0',
+                                      fontSize: '0.72rem',
+                                      fontWeight: 700,
+                                      cursor: 'pointer',
+                                      transition: 'all 0.15s ease'
+                                    }}
+                                    title="Mark task completed"
+                                  >
+                                    <Check size={12} />
+                                    <span>Complete</span>
+                                  </button>
+                                )}
                                 <button
                                   onClick={() => handleEdit(task)}
                                   className="btn btn-ghost"

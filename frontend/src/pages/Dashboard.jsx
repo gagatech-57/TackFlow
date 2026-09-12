@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Layers, CheckCircle2, Clock, ArrowRight } from 'lucide-react';
+import { Layers, CheckCircle2, Check, Clock, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { dashboardService } from '../services/dashboardService';
 import { projectService } from '../services/projectService';
 import { taskService } from '../services/taskService';
@@ -18,6 +19,7 @@ import { pageCache } from '../utils/cache';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const [metrics, setMetrics] = useState(pageCache.dashboard?.metrics || {
@@ -86,6 +88,19 @@ const Dashboard = () => {
       console.error('Failed to load dashboard data', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCompleteUrgentTask = async (task) => {
+    try {
+      const res = await taskService.updateTask(task.id, { status: 'Completed' });
+      if (res && (res.success || res.status === 200 || res.data)) {
+        showToast('Urgent task node resolved!', 'success');
+        setUrgentTasks(prev => prev.filter(t => t.id !== task.id));
+        loadDashboardData(true);
+      }
+    } catch (err) {
+      showToast('Failed to complete task', 'error');
     }
   };
 
@@ -317,10 +332,33 @@ const Dashboard = () => {
                     {task.dueDate && <span>&bull; Due {new Date(task.dueDate).toLocaleDateString()}</span>}
                   </div>
 
-                  {/* ROW 3: Priority + Status Badges */}
-                  <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-slate-200/60">
-                    <PriorityBadge priority={task.priority} />
-                    <StatusBadge status={task.status} />
+                  {/* ROW 3: Priority + Status Badges & Quick Complete Action */}
+                  <div className="flex items-center justify-between gap-2 flex-wrap pt-1 border-t border-slate-200/60">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <PriorityBadge priority={task.priority} />
+                      <StatusBadge status={task.status} />
+                    </div>
+                    <button
+                      onClick={() => handleCompleteUrgentTask(task)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                        padding: '0.2rem 0.5rem',
+                        borderRadius: '6px',
+                        backgroundColor: '#ecfdf5',
+                        color: '#047857',
+                        border: '1px solid #a7f3d0',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
+                      }}
+                      title="Mark task completed"
+                    >
+                      <Check size={12} />
+                      <span>Complete</span>
+                    </button>
                   </div>
                 </div>
               ))}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Plus, Calendar, Edit, Trash2, CheckCircle2, Clock, Circle, Filter } from 'lucide-react';
+import { ArrowLeft, Plus, Calendar, Edit, Trash2, CheckCircle2, Check, Clock, Circle, Filter } from 'lucide-react';
 import { projectService } from '../services/projectService';
 import { taskService } from '../services/taskService';
 import { calculateProjectProgress } from '../utils/progress';
@@ -302,7 +302,31 @@ const ProjectDetails = () => {
                         <StatusBadge status={task.status} />
                       </div>
 
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1.5">
+                        {!isCompleted && (
+                          <button
+                            onClick={() => handleToggleTaskStatus(task)}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.25rem',
+                              padding: '0.25rem 0.625rem',
+                              borderRadius: '6px',
+                              backgroundColor: '#ecfdf5',
+                              color: '#047857',
+                              border: '1px solid #a7f3d0',
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              transition: 'all 0.15s ease'
+                            }}
+                            title="Mark task completed"
+                          >
+                            <Check size={13} />
+                            <span>Complete</span>
+                          </button>
+                        )}
+
                         <button
                           onClick={() => {
                             setEditingTask(task);
