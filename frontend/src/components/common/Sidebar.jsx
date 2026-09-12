@@ -156,10 +156,10 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
                           layoutId="activeNavIndicator"
                           style={{
                             position: 'absolute',
-                            right: '10px',
-                            width: '6px',
-                            height: '6px',
-                            borderRadius: '50%',
+                            right: '8px',
+                            width: '3.5px',
+                            height: '20px',
+                            borderRadius: '4px',
                             backgroundColor: item.accent
                           }}
                           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
