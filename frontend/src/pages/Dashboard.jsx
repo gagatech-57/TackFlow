@@ -332,20 +332,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-      {/* Modals */}
-      <ProjectFormModal
-        isOpen={isProjectModalOpen}
-        onClose={() => setIsProjectModalOpen(false)}
-        onProjectSaved={() => loadDashboardData()}
-      />
-      <TaskFormModal
-        isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
-        onTaskSaved={() => loadDashboardData()}
-      />
-    </div>
-  );
-};
-
-export default Dashboard;
