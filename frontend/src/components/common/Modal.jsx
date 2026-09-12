@@ -57,7 +57,7 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = '540px' }) => {
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             style={{
               position: 'relative',
-              width: '100%',
+              width: 'calc(100% - 2rem)',
               maxWidth: maxWidth,
               backgroundColor: 'var(--bg-surface)',
               borderRadius: 'var(--radius-xl)',

@@ -1,7 +1,7 @@
 const http = require('http');
 
 const PORT = 5000;
-const BASE_URL = `http://localhost:${PORT}/api`;
+const BASE_URL = `http://127.0.0.1:${PORT}/api`;
 
 function request(method, path, body = null, headers = {}) {
   return new Promise((resolve, reject) => {

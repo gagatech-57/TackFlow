@@ -170,33 +170,43 @@ const Register = () => {
       </div>
 
       {/* Right Column — Elevated Kinetic Form Card */}
-      <div style={{
-        flex: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2.5rem',
-        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
-      }}>
+      <div className="w-full flex-1 flex items-center justify-center p-4 sm:p-10 bg-slate-50 min-h-screen lg:min-h-0">
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          style={{
-            width: '100%',
-            maxWidth: '450px',
-            backgroundColor: '#ffffff',
-            borderRadius: '20px',
-            border: '1px solid rgba(226, 232, 240, 0.9)',
-            boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.03)',
-            padding: '2.5rem'
-          }}
+          className="w-full max-w-none sm:max-w-md bg-white rounded-2xl border border-slate-200 shadow-xl p-5 sm:p-10"
         >
-          <div style={{ marginBottom: '1.75rem' }}>
-            <h2 style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.375rem', letterSpacing: '-0.02em' }}>
+          {/* Mobile Branding Header */}
+          <div className="flex items-center gap-3 mb-6 lg:hidden">
+            <div style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)'
+            }}>
+              <Zap size={20} fill="#ffffff" />
+            </div>
+            <div>
+              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                TaskFlow
+              </span>
+              <span style={{ display: 'block', fontSize: '0.65rem', color: '#2563eb', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em' }}>
+                Kinetic Workspace
+              </span>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.375rem', letterSpacing: '-0.02em' }}>
               Create an account
             </h2>
-            <p style={{ fontSize: '0.9rem', fontWeight: 600, color: '#475569' }}>
+            <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#475569' }}>
               Start tracking your project momentum in seconds.
             </p>
           </div>
@@ -213,19 +223,20 @@ const Register = () => {
                 color: '#b91c1c',
                 fontSize: '0.84rem',
                 fontWeight: 600,
-                marginBottom: '1.25rem'
+                marginBottom: '1.25rem',
+                wordBreak: 'break-word'
               }}
             >
               {error}
             </motion.div>
           )}
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
+          <form onSubmit={handleSubmit} className="w-full">
+            <div className="form-group w-full">
               <label className="form-label" htmlFor="name" style={{ fontWeight: 700, color: '#0f172a' }}>
                 Full Name
               </label>
-              <div style={{ position: 'relative' }}>
+              <div style={{ position: 'relative' }} className="w-full">
                 <input
                   id="name"
                   type="text"
@@ -233,7 +244,7 @@ const Register = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Enter your name"
-                  className="form-input"
+                  className="form-input w-full"
                   style={{ paddingLeft: '2.5rem', fontWeight: 600 }}
                   required
                 />
@@ -241,11 +252,11 @@ const Register = () => {
               </div>
             </div>
 
-            <div className="form-group">
+            <div className="form-group w-full">
               <label className="form-label" htmlFor="email" style={{ fontWeight: 700, color: '#0f172a' }}>
                 Email Address
               </label>
-              <div style={{ position: 'relative' }}>
+              <div style={{ position: 'relative' }} className="w-full">
                 <input
                   id="email"
                   type="email"
@@ -253,7 +264,7 @@ const Register = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Enter your email"
-                  className="form-input"
+                  className="form-input w-full"
                   style={{ paddingLeft: '2.5rem', fontWeight: 600 }}
                   required
                 />
@@ -261,11 +272,11 @@ const Register = () => {
               </div>
             </div>
 
-            <div className="form-group">
+            <div className="form-group w-full">
               <label className="form-label" htmlFor="password" style={{ fontWeight: 700, color: '#0f172a' }}>
                 Password
               </label>
-              <div style={{ position: 'relative' }}>
+              <div style={{ position: 'relative' }} className="w-full">
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -273,7 +284,7 @@ const Register = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Enter your password"
-                  className="form-input"
+                  className="form-input w-full"
                   style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem', fontWeight: 600 }}
                   required
                 />
@@ -291,6 +302,7 @@ const Register = () => {
                     color: 'var(--text-muted)',
                     cursor: 'pointer'
                   }}
+                  aria-label="Toggle password visibility"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -314,11 +326,11 @@ const Register = () => {
               )}
             </div>
 
-            <div className="form-group">
+            <div className="form-group w-full">
               <label className="form-label" htmlFor="confirmPassword" style={{ fontWeight: 700, color: '#0f172a' }}>
                 Confirm Password
               </label>
-              <div style={{ position: 'relative' }}>
+              <div style={{ position: 'relative' }} className="w-full">
                 <input
                   id="confirmPassword"
                   type={showPassword ? 'text' : 'password'}
@@ -326,7 +338,7 @@ const Register = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="Re-enter password"
-                  className="form-input"
+                  className="form-input w-full"
                   style={{ paddingLeft: '2.5rem', fontWeight: 600 }}
                   required
                 />
@@ -337,9 +349,8 @@ const Register = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="btn btn-primary"
+              className="btn btn-primary w-full"
               style={{
-                width: '100%',
                 padding: '0.8rem',
                 fontSize: '0.95rem',
                 fontWeight: 700,
@@ -359,7 +370,7 @@ const Register = () => {
           </form>
 
           <div style={{
-            marginTop: '1.75rem',
+            marginTop: '1.5rem',
             textAlign: 'center',
             fontSize: '0.875rem',
             fontWeight: 600,

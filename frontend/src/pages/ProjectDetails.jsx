@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Plus, Calendar, Edit, Trash2, CheckCircle2, Clock, Circle, Filter } from 'lucide-react';
 import { projectService } from '../services/projectService';
 import { taskService } from '../services/taskService';
+import { calculateProjectProgress } from '../utils/progress';
 import StatusBadge, { PriorityBadge } from '../components/common/Badge';
 import KineticLoader from '../components/common/KineticLoader';
 import TimelineNode from '../components/common/TimelineNode';
@@ -114,10 +115,10 @@ const ProjectDetails = () => {
 
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter(t => t.status === 'Completed').length;
-  const progressPct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const progressPct = calculateProjectProgress(project, tasks);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       {/* Back button & Action Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
@@ -157,23 +158,23 @@ const ProjectDetails = () => {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="kinetic-card p-6 sm:p-8"
+        className="kinetic-card p-5 sm:p-8 w-full min-w-0"
       >
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-5">
-          <div>
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-2 flex-wrap">
-              <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: 'var(--text-main)' }}>
+              <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', wordBreak: 'break-word' }}>
                 {project.name}
               </h1>
               <StatusBadge status={project.status} />
             </div>
-            <p style={{ fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-secondary)', maxWidth: '720px' }}>
+            <p style={{ fontSize: '0.925rem', fontWeight: 500, color: 'var(--text-secondary)', maxWidth: '720px' }}>
               {project.description || 'No description provided.'}
             </p>
           </div>
 
-          <div className="md:text-right">
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>STREAM COMPLETION</span>
+          <div className="md:text-right flex items-center md:flex-col gap-2 md:gap-0 justify-between">
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>STREAM COMPLETION</span>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '2rem', fontWeight: 800, color: 'var(--primary)' }}>
               {progressPct}%
             </div>
@@ -181,7 +182,7 @@ const ProjectDetails = () => {
         </div>
 
         {/* Start / Target End Date Row */}
-        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', fontSize: '0.84rem', color: 'var(--text-secondary)', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)' }}>
+        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontSize: '0.84rem', color: 'var(--text-secondary)', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)' }}>
           {project.startDate && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
               <Calendar size={15} style={{ color: 'var(--text-muted)' }} />
@@ -209,7 +210,7 @@ const ProjectDetails = () => {
       />
 
       {/* Associated Task Nodes Stream List */}
-      <div className="kinetic-card" style={{ padding: '1.75rem' }}>
+      <div className="kinetic-card p-5 sm:p-6 w-full min-w-0">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
           <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-main)' }}>
             Project Task Nodes ({tasks.length})
@@ -250,18 +251,12 @@ const ProjectDetails = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl border border-slate-200 w-full min-w-0"
                     style={{
-                      padding: '1rem 1.25rem',
-                      borderRadius: 'var(--radius-md)',
                       backgroundColor: isCompleted ? '#f8fafc' : 'var(--bg-app)',
-                      border: '1px solid var(--border-subtle)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      gap: '1rem'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', flex: 1, minWidth: 0 }}>
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
                       <button
                         onClick={() => handleToggleTaskStatus(task)}
                         style={{
@@ -271,55 +266,60 @@ const ProjectDetails = () => {
                           color: isCompleted ? '#10b981' : '#cbd5e1',
                           display: 'flex',
                           alignItems: 'center',
-                          padding: 0
+                          padding: 0,
+                          marginTop: '2px'
                         }}
                         aria-label="Toggle complete"
                       >
                         <CheckCircle2 size={22} style={{ fill: isCompleted ? '#ecfdf5' : 'transparent' }} />
                       </button>
 
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{
-                          fontSize: '0.9375rem',
-                          fontWeight: 600,
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold break-words" style={{
                           color: isCompleted ? 'var(--text-muted)' : 'var(--text-main)',
                           textDecoration: isCompleted ? 'line-through' : 'none'
                         }}>
                           {task.name}
                         </div>
                         {task.description && (
-                          <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', truncate: true }}>
+                          <div className="text-xs text-slate-500 line-clamp-1 break-words">
                             {task.description}
                           </div>
                         )}
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <PriorityBadge priority={task.priority} />
-                      <StatusBadge status={task.status} />
+                    <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/60">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <PriorityBadge priority={task.priority} />
+                        <StatusBadge status={task.status} />
+                      </div>
 
-                      <button
-                        onClick={() => {
-                          setEditingTask(task);
-                          setIsTaskModalOpen(true);
-                        }}
-                        className="btn btn-ghost"
-                        style={{ padding: '4px', borderRadius: '4px' }}
-                      >
-                        <Edit size={15} />
-                      </button>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => {
+                            setEditingTask(task);
+                            setIsTaskModalOpen(true);
+                          }}
+                          className="btn btn-ghost"
+                          style={{ padding: '4px', borderRadius: '4px' }}
+                          aria-label="Edit task"
+                        >
+                          <Edit size={15} />
+                        </button>
 
-                      <button
-                        onClick={() => {
-                          setTaskToDelete(task);
-                          setDeleteTaskModalOpen(true);
-                        }}
-                        className="btn btn-ghost"
-                        style={{ padding: '4px', borderRadius: '4px', color: '#ef4444' }}
-                      >
-                        <Trash2 size={15} />
-                      </button>
+                        <button
+                          onClick={() => {
+                            setTaskToDelete(task);
+                            setDeleteTaskModalOpen(true);
+                          }}
+                          className="btn btn-ghost"
+                          style={{ padding: '4px', borderRadius: '4px', color: '#ef4444' }}
+                          aria-label="Delete task"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 );

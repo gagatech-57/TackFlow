@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Plus, Calendar, FolderKanban, ArrowRight, Edit, Trash2, X } from 'lucide-react';
 import { projectService } from '../services/projectService';
+import { calculateProjectProgress } from '../utils/progress';
 import StatusBadge from '../components/common/Badge';
 import KineticLoader from '../components/common/KineticLoader';
 import EmptyState from '../components/common/EmptyState';
@@ -88,11 +89,11 @@ const Projects = () => {
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexWrap: 'wrap' }}>
             <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)' }}>
               Project Streams
             </h1>
@@ -119,7 +120,7 @@ const Projects = () => {
       </div>
 
       {/* Search Bar & Status Filter Tabs */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm w-full min-w-0">
         {/* Animated Focus Search Bar */}
         <div style={{ position: 'relative', flex: 1, width: '100%', minWidth: 0 }}>
           <input
@@ -144,8 +145,8 @@ const Projects = () => {
           )}
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 md:pb-0">
+        {/* Filter Pills Scroll Container */}
+        <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 md:pb-0 whitespace-nowrap">
           {['All', 'In Progress', 'Pending', 'Completed', 'Not Started'].map((status) => (
             <button
               key={status}
@@ -183,13 +184,11 @@ const Projects = () => {
       ) : (
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full min-w-0"
         >
           <AnimatePresence>
             {filteredProjects.map((project) => {
-              const totalTasks = project.tasks ? project.tasks.length : (project._count ? project._count.tasks : 0);
-              const completedTasks = project.tasks ? project.tasks.filter(t => t.status === 'Completed').length : 0;
-              const progressPct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+              const progressPct = calculateProjectProgress(project);
 
               return (
                 <motion.div
@@ -200,9 +199,9 @@ const Projects = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   whileHover={{ y: -3 }}
                   onClick={() => navigate(`/projects/${project.id}`)}
-                  className="kinetic-card-interactive"
+                  className="kinetic-card-interactive w-full min-w-0"
                   style={{
-                    padding: '1.5rem',
+                    padding: '1.25rem sm:1.5rem',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -212,8 +211,8 @@ const Projects = () => {
                 >
                   <div>
                     {/* Header */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                      <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.3 }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+                      <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.3, wordBreak: 'break-word', flex: 1, minWidth: '120px' }}>
                         {project.name}
                       </h3>
                       <StatusBadge status={project.status} />

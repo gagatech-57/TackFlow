@@ -59,27 +59,31 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '1.5rem 1rem',
+        padding: '1.25rem 1rem',
         position: 'sticky',
         top: 0,
         height: '100vh',
+        maxHeight: '100vh',
         zIndex: 100,
-        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        overflow: 'hidden'
       }}>
-        <div>
+        {/* Top Header & Scrollable Nav Container */}
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
           {/* Kinetic Workspace Logo Header */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 0.5rem 1.75rem 0.5rem',
+            padding: '0 0.5rem 1.25rem 0.5rem',
             borderBottom: '1px solid var(--border-subtle)',
-            marginBottom: '1.5rem'
+            marginBottom: '1rem',
+            flexShrink: 0
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div style={{
-                width: '40px',
-                height: '40px',
+                width: '38px',
+                height: '38px',
                 borderRadius: '12px',
                 background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
                 display: 'flex',
@@ -88,12 +92,12 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
                 color: '#ffffff',
                 boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)'
               }}>
-                <Zap size={22} fill="#ffffff" />
+                <Zap size={20} fill="#ffffff" />
               </div>
               <div>
                 <span style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.2rem',
+                  fontSize: '1.15rem',
                   fontWeight: 800,
                   color: 'var(--text-main)',
                   letterSpacing: '-0.02em',
@@ -103,7 +107,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
                   TaskFlow
                 </span>
                 <span style={{
-                  fontSize: '0.6875rem',
+                  fontSize: '0.65rem',
                   fontWeight: 700,
                   color: '#2563eb',
                   textTransform: 'uppercase',
@@ -119,16 +123,23 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
               <button
                 type="button"
                 onClick={() => setIsMobileOpen(false)}
-                className="p-1 text-slate-500 hover:text-slate-900 lg:hidden"
+                className="p-2.5 text-slate-500 hover:text-slate-900 lg:hidden rounded-lg hover:bg-slate-100 transition-colors"
                 aria-label="Close navigation menu"
               >
-                <X size={22} />
+                <X size={20} />
               </button>
             )}
           </div>
 
-          {/* Navigation Stream Links */}
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {/* Navigation Stream Links — Scrollable Container */}
+          <nav style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.375rem',
+            flex: 1,
+            overflowY: 'auto',
+            paddingRight: '0.25rem'
+          }}>
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -192,29 +203,31 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
           </nav>
         </div>
 
-        {/* Styled User Profile Card & Logout */}
+        {/* Styled User Profile Card & Logout Footer — Fixed & Always Reachable */}
         <div style={{
-          paddingTop: '1.25rem',
+          paddingTop: '1rem',
+          marginTop: '0.5rem',
           borderTop: '1px solid var(--border-subtle)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.75rem'
+          gap: '0.75rem',
+          flexShrink: 0
         }}>
           {/* User Profile Container */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.875rem',
-            padding: '0.75rem 0.875rem',
+            gap: '0.75rem',
+            padding: '0.625rem 0.75rem',
             backgroundColor: '#f8fafc',
             border: '1px solid #e2e8f0',
-            borderRadius: '14px',
-            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)'
+            borderRadius: '12px',
+            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)'
           }}>
             <div style={{ position: 'relative' }}>
               <div style={{
-                width: '38px',
-                height: '38px',
+                width: '36px',
+                height: '36px',
                 borderRadius: '50%',
                 background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
                 color: '#ffffff',
@@ -222,17 +235,17 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 800,
-                fontSize: '0.9rem',
+                fontSize: '0.85rem',
                 boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)'
               }}>
-                {(user?.name || user?.fullName) ? (user.name || user.fullName).charAt(0).toUpperCase() : <User size={18} />}
+                {(user?.name || user?.fullName) ? (user.name || user.fullName).charAt(0).toUpperCase() : <User size={16} />}
               </div>
               <div style={{
                 position: 'absolute',
                 bottom: 0,
                 right: 0,
-                width: '10px',
-                height: '10px',
+                width: '9px',
+                height: '9px',
                 borderRadius: '50%',
                 backgroundColor: '#10b981',
                 border: '2px solid #ffffff'
@@ -241,7 +254,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
 
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{
-                fontSize: '0.875rem',
+                fontSize: '0.84rem',
                 fontWeight: 700,
                 color: '#0f172a',
                 overflow: 'hidden',
@@ -251,7 +264,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
                 {user?.name || user?.fullName || 'Workspace User'}
               </div>
               <div style={{
-                fontSize: '0.75rem',
+                fontSize: '0.72rem',
                 color: '#64748b',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',

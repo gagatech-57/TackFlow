@@ -38,6 +38,9 @@ const getDashboardMetrics = async (req, res, next) => {
         orderBy: { createdAt: 'desc' },
         take: 5,
         include: {
+          tasks: {
+            select: { id: true, status: true }
+          },
           _count: { select: { tasks: true } }
         }
       }),

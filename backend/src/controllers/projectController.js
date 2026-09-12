@@ -28,6 +28,9 @@ const getProjects = async (req, res, next) => {
       prisma.project.findMany({
         where: whereClause,
         include: {
+          tasks: {
+            select: { id: true, status: true }
+          },
           _count: {
             select: { tasks: true }
           }

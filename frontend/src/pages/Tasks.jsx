@@ -110,12 +110,12 @@ const Tasks = () => {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexWrap: 'wrap' }}>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', wordBreak: 'break-word' }}>
               Task Stream Board
             </h1>
             <span style={{
@@ -124,7 +124,8 @@ const Tasks = () => {
               padding: '0.2rem 0.625rem',
               borderRadius: 'var(--radius-full)',
               backgroundColor: 'var(--secondary-light)',
-              color: 'var(--secondary)'
+              color: 'var(--secondary)',
+              whiteSpace: 'nowrap'
             }}>
               {tasks.length} Nodes
             </span>
@@ -141,7 +142,7 @@ const Tasks = () => {
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm w-full min-w-0">
         {/* Search */}
         <div style={{ position: 'relative', flex: 1, width: '100%', minWidth: 0 }}>
           <input
@@ -164,9 +165,9 @@ const Tasks = () => {
         </div>
 
         {/* Filter Controls Wrapper */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          {/* Status Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto min-w-0">
+          {/* Isolated Status Filter Chips Horizontal Scroll Container */}
+          <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 sm:pb-0 max-w-full min-w-0">
             {['All', 'Pending', 'In Progress', 'Completed'].map((status) => (
               <button
                 key={status}
@@ -190,7 +191,7 @@ const Tasks = () => {
           </div>
 
           {/* Priority Filter Select */}
-          <div className="w-full sm:w-auto min-w-[160px]">
+          <div className="w-full sm:w-48 min-w-0">
             <CustomSelect
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
@@ -216,7 +217,7 @@ const Tasks = () => {
           onAction={searchQuery || statusFilter !== 'All' ? null : handleCreateNew}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start w-full min-w-0">
           {streamColumns.map((col) => {
             const columnTasks = filteredTasks.filter(t => t.status === col.status);
             const Icon = col.icon;
@@ -224,7 +225,7 @@ const Tasks = () => {
             return (
               <div
                 key={col.status}
-                className="kinetic-card"
+                className="kinetic-card w-full min-w-0"
                 style={{ padding: '1.25rem' }}
               >
                 {/* Stream Header */}
@@ -285,6 +286,7 @@ const Tasks = () => {
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             whileHover={{ y: -2 }}
+                            className="w-full min-w-0"
                             style={{
                               padding: '1rem',
                               borderRadius: 'var(--radius-md)',
@@ -294,9 +296,9 @@ const Tasks = () => {
                               transition: 'var(--transition-kinetic)'
                             }}
                           >
-                            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.625rem', marginBottom: '0.5rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.625rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                               {/* Task Checkbox & Title */}
-                              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.625rem', flex: 1 }}>
+                              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.625rem', flex: 1, minWidth: 0 }}>
                                 <button
                                   onClick={() => handleToggleComplete(task)}
                                   style={{
@@ -318,7 +320,8 @@ const Tasks = () => {
                                   fontWeight: 600,
                                   color: isCompleted ? 'var(--text-muted)' : 'var(--text-main)',
                                   textDecoration: isCompleted ? 'line-through' : 'none',
-                                  lineHeight: 1.35
+                                  lineHeight: 1.35,
+                                  wordBreak: 'break-word'
                                 }}>
                                   {task.name}
                                 </span>
@@ -337,7 +340,8 @@ const Tasks = () => {
                                 lineClamp: 2,
                                 WebkitLineClamp: 2,
                                 WebkitBoxOrient: 'vertical',
-                                overflow: 'hidden'
+                                overflow: 'hidden',
+                                wordBreak: 'break-word'
                               }}>
                                 {task.description}
                               </p>
@@ -348,20 +352,22 @@ const Tasks = () => {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'space-between',
+                              gap: '0.5rem',
                               paddingTop: '0.625rem',
                               borderTop: '1px solid var(--border-subtle)',
                               fontSize: '0.75rem',
                               color: 'var(--text-muted)'
                             }}>
-                              <span style={{ fontWeight: 600, color: 'var(--primary)' }}>
+                              <span style={{ fontWeight: 600, color: 'var(--primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>
                                 {task.project?.name || 'Project Stream'}
                               </span>
 
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flexShrink: 0 }}>
                                 <button
                                   onClick={() => handleEdit(task)}
                                   className="btn btn-ghost"
                                   style={{ padding: '3px', borderRadius: '4px' }}
+                                  aria-label="Edit task"
                                 >
                                   <Edit size={14} />
                                 </button>
@@ -369,6 +375,7 @@ const Tasks = () => {
                                   onClick={() => confirmDelete(task)}
                                   className="btn btn-ghost"
                                   style={{ padding: '3px', borderRadius: '4px', color: '#ef4444' }}
+                                  aria-label="Delete task"
                                 >
                                   <Trash2 size={14} />
                                 </button>
