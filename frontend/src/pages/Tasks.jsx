@@ -31,18 +31,32 @@ const Tasks = () => {
     loadTasks();
   }, []);
 
-  const loadTasks = async () => {
-    setLoading(true);
+  const loadTasks = async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
     try {
       const res = await taskService.getTasks();
       const list = Array.isArray(res) ? res : (res?.data || []);
       setTasks(list);
     } catch (err) {
       console.error('Failed to load tasks', err);
-      showToast('Failed to load task stream', 'error');
+      if (!isSilent) showToast('Failed to load task stream', 'error');
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
+  };
+
+  const handleTaskSaved = (savedTask) => {
+    if (savedTask && savedTask.id) {
+      setTasks((prev) => {
+        const exists = prev.some(t => t.id === savedTask.id);
+        if (exists) {
+          return prev.map(t => t.id === savedTask.id ? { ...t, ...savedTask } : t);
+        } else {
+          return [savedTask, ...prev];
+        }
+      });
+    }
+    loadTasks(true);
   };
 
   const handleCreateNew = () => {
@@ -398,7 +412,7 @@ const Tasks = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         taskToEdit={editingTask}
-        onTaskSaved={() => loadTasks()}
+        onTaskSaved={handleTaskSaved}
       />
 
       {/* Task Delete Confirmation Modal */}

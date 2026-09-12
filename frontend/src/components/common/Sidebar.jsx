@@ -6,10 +6,13 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import Logo from './Logo';
 
+import Modal from './Modal';
+
 const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
   const { user, logout } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const [showLogoutModal, setShowLogoutModal] = React.useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -31,7 +34,8 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
     };
   }, [isMobileOpen, setIsMobileOpen]);
 
-  const handleLogout = () => {
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
     if (setIsMobileOpen) setIsMobileOpen(false);
     logout();
     showToast('Logged out of TaskFlow', 'info');
@@ -246,7 +250,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
           <motion.button
             whileHover={{ backgroundColor: '#fef2f2', borderColor: '#fecaca', color: '#dc2626' }}
             whileTap={{ scale: 0.98 }}
-            onClick={handleLogout}
+            onClick={() => setShowLogoutModal(true)}
             style={{
               width: '100%',
               display: 'flex',
@@ -269,6 +273,34 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
           </motion.button>
         </div>
       </aside>
+
+      {/* Sign Out Confirmation Modal */}
+      <Modal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        title="Sign Out of TaskFlow?"
+        maxWidth="400px"
+      >
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', fontWeight: 500 }}>
+          Are you sure you want to sign out of your kinetic workspace session?
+        </p>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+          <button
+            onClick={() => setShowLogoutModal(false)}
+            className="btn btn-secondary"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={confirmLogout}
+            className="btn btn-danger"
+            style={{ fontWeight: 700 }}
+          >
+            Sure, Sign Out
+          </button>
+        </div>
+      </Modal>
     </>
   );
 };

@@ -37,8 +37,8 @@ const Dashboard = () => {
     loadDashboardData();
   }, []);
 
-  const loadDashboardData = async () => {
-    setLoading(true);
+  const loadDashboardData = async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
     try {
       const [metricsRes, projectsRes, tasksRes] = await Promise.all([
         dashboardService.getMetrics(),
@@ -69,7 +69,7 @@ const Dashboard = () => {
     } catch (err) {
       console.error('Failed to load dashboard data', err);
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   };
 
@@ -317,12 +317,12 @@ const Dashboard = () => {
       <ProjectFormModal
         isOpen={isProjectModalOpen}
         onClose={() => setIsProjectModalOpen(false)}
-        onProjectSaved={() => loadDashboardData()}
+        onProjectSaved={() => loadDashboardData(true)}
       />
       <TaskFormModal
         isOpen={isTaskModalOpen}
         onClose={() => setIsTaskModalOpen(false)}
-        onTaskSaved={() => loadDashboardData()}
+        onTaskSaved={() => loadDashboardData(true)}
       />
     </div>
   );

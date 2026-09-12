@@ -38,8 +38,8 @@ const ProjectDetails = () => {
     loadProjectAndTasks();
   }, [id]);
 
-  const loadProjectAndTasks = async () => {
-    setLoading(true);
+  const loadProjectAndTasks = async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
     try {
       const [projRes, tasksRes] = await Promise.all([
         projectService.getProjectById(id),
@@ -55,9 +55,9 @@ const ProjectDetails = () => {
       setTasks(tasksList);
     } catch (err) {
       console.error('Failed to load project details', err);
-      showToast('Unable to load project stream details', 'error');
+      if (!isSilent) showToast('Unable to load project stream details', 'error');
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   };
 
@@ -337,7 +337,7 @@ const ProjectDetails = () => {
         onClose={() => setIsTaskModalOpen(false)}
         taskToEdit={editingTask}
         projectId={id}
-        onTaskSaved={() => loadProjectAndTasks()}
+        onTaskSaved={() => loadProjectAndTasks(true)}
       />
 
       {/* Project Modal */}
@@ -345,7 +345,7 @@ const ProjectDetails = () => {
         isOpen={isProjectModalOpen}
         onClose={() => setIsProjectModalOpen(false)}
         projectToEdit={project}
-        onProjectSaved={() => loadProjectAndTasks()}
+        onProjectSaved={() => loadProjectAndTasks(true)}
       />
 
       {/* Task Delete Modal */}

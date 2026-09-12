@@ -32,18 +32,32 @@ const Projects = () => {
     loadProjects();
   }, []);
 
-  const loadProjects = async () => {
-    setLoading(true);
+  const loadProjects = async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
     try {
       const res = await projectService.getProjects();
       const list = Array.isArray(res) ? res : (res?.data || []);
       setProjects(list);
     } catch (err) {
       console.error('Failed to fetch projects', err);
-      showToast('Failed to load project streams', 'error');
+      if (!isSilent) showToast('Failed to load project streams', 'error');
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
+  };
+
+  const handleProjectSaved = (savedProject) => {
+    if (savedProject && savedProject.id) {
+      setProjects((prev) => {
+        const exists = prev.some(p => p.id === savedProject.id);
+        if (exists) {
+          return prev.map(p => p.id === savedProject.id ? { ...p, ...savedProject } : p);
+        } else {
+          return [savedProject, ...prev];
+        }
+      });
+    }
+    loadProjects(true);
   };
 
   const handleCreateNew = () => {
@@ -272,7 +286,7 @@ const Projects = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         projectToEdit={editingProject}
-        onProjectSaved={() => loadProjects()}
+        onProjectSaved={handleProjectSaved}
       />
 
       {/* Delete Confirmation Modal */}
