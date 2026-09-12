@@ -132,7 +132,12 @@ List all projects owned by authenticated user.
         "createdAt": "2026-09-11T10:00:00.000Z",
         "_count": {
           "tasks": 3
-        }
+        },
+        "tasks": [
+          { "id": 101, "status": "Completed" },
+          { "id": 102, "status": "In Progress" },
+          { "id": 103, "status": "Pending" }
+        ]
       }
     ],
     "meta": {
