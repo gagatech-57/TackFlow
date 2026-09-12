@@ -239,7 +239,14 @@ const Tasks = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start w-full min-w-0">
           {streamColumns.map((col) => {
-            const columnTasks = filteredTasks.filter(t => t.status === col.status);
+            const columnTasks = filteredTasks
+              .filter(t => t.status === col.status)
+              .sort((a, b) => {
+                if (a.createdAt && b.createdAt) {
+                  return new Date(a.createdAt) - new Date(b.createdAt);
+                }
+                return (a.id || 0) - (b.id || 0);
+              });
             const Icon = col.icon;
 
             return (

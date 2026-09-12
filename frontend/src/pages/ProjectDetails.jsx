@@ -243,7 +243,12 @@ const ProjectDetails = () => {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <AnimatePresence>
-              {tasks.map((task) => {
+              {[...tasks].sort((a, b) => {
+                if (a.createdAt && b.createdAt) {
+                  return new Date(a.createdAt) - new Date(b.createdAt);
+                }
+                return (a.id || 0) - (b.id || 0);
+              }).map((task) => {
                 const isCompleted = task.status === 'Completed';
 
                 return (

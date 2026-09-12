@@ -8,7 +8,7 @@ const { successResponse, errorResponse } = require('../utils/responseHandler');
 const getTasks = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const { projectId, search, status, priority, page = 1, limit = 100, sortBy = 'createdAt', order = 'desc' } = req.query;
+    const { projectId, search, status, priority, page = 1, limit = 100, sortBy = 'createdAt', order = 'asc' } = req.query;
 
     const whereClause = {
       userId, // User isolation check

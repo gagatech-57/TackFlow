@@ -3,6 +3,14 @@ import { motion } from 'framer-motion';
 import { CheckCircle2, Clock, Circle, ArrowRight } from 'lucide-react';
 
 const TimelineNode = ({ tasks = [], onTaskClick, activeTaskId }) => {
+  // Sort tasks chronologically in 1st, 2nd, 3rd creation order
+  const sortedTasks = [...tasks].sort((a, b) => {
+    if (a.createdAt && b.createdAt) {
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    }
+    return (a.id || 0) - (b.id || 0);
+  });
+
   return (
     <div style={{
       padding: '1.5rem',
@@ -34,11 +42,11 @@ const TimelineNode = ({ tasks = [], onTaskClick, activeTaskId }) => {
           backgroundColor: 'var(--bg-subtle)',
           color: 'var(--text-secondary)'
         }}>
-          {tasks.filter(t => t.status === 'Completed').length} / {tasks.length} Nodes Complete
+          {sortedTasks.filter(t => t.status === 'Completed').length} / {sortedTasks.length} Nodes Complete
         </span>
       </div>
 
-      {tasks.length === 0 ? (
+      {sortedTasks.length === 0 ? (
         <div style={{
           textAlign: 'center',
           padding: '2rem 1rem',
@@ -79,16 +87,16 @@ const TimelineNode = ({ tasks = [], onTaskClick, activeTaskId }) => {
           <div style={{
             width: '40px',
             height: '3px',
-            backgroundColor: tasks[0]?.status === 'Completed' ? '#10b981' : '#2563eb',
+            backgroundColor: sortedTasks[0]?.status === 'Completed' ? '#10b981' : '#2563eb',
             position: 'relative'
           }} />
 
           {/* Task Nodes Stream */}
-          {tasks.map((task, idx) => {
+          {sortedTasks.map((task, idx) => {
             const isCompleted = task.status === 'Completed';
             const isInProgress = task.status === 'In Progress';
             const isActive = activeTaskId === task.id;
-            const nextCompleted = tasks[idx + 1]?.status === 'Completed';
+            const nextCompleted = sortedTasks[idx + 1]?.status === 'Completed';
 
             return (
               <React.Fragment key={task.id || idx}>
@@ -153,7 +161,7 @@ const TimelineNode = ({ tasks = [], onTaskClick, activeTaskId }) => {
                 </motion.div>
 
                 {/* Connector Line between nodes */}
-                {idx < tasks.length - 1 && (
+                {idx < sortedTasks.length - 1 && (
                   <div style={{
                     width: '44px',
                     height: '3px',
@@ -169,7 +177,7 @@ const TimelineNode = ({ tasks = [], onTaskClick, activeTaskId }) => {
           <div style={{
             width: '40px',
             height: '3px',
-            backgroundColor: tasks.every(t => t.status === 'Completed') && tasks.length > 0 ? '#10b981' : '#e2e8f0'
+            backgroundColor: sortedTasks.every(t => t.status === 'Completed') && sortedTasks.length > 0 ? '#10b981' : '#e2e8f0'
           }} />
 
           {/* END Node */}
@@ -178,12 +186,12 @@ const TimelineNode = ({ tasks = [], onTaskClick, activeTaskId }) => {
               width: '36px',
               height: '36px',
               borderRadius: '50%',
-              backgroundColor: tasks.every(t => t.status === 'Completed') && tasks.length > 0 ? '#ecfdf5' : '#f8fafc',
-              border: `2px solid ${tasks.every(t => t.status === 'Completed') && tasks.length > 0 ? '#10b981' : '#cbd5e1'}`,
+              backgroundColor: sortedTasks.every(t => t.status === 'Completed') && sortedTasks.length > 0 ? '#ecfdf5' : '#f8fafc',
+              border: `2px solid ${sortedTasks.every(t => t.status === 'Completed') && sortedTasks.length > 0 ? '#10b981' : '#cbd5e1'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: tasks.every(t => t.status === 'Completed') && tasks.length > 0 ? '#10b981' : '#94a3b8',
+              color: sortedTasks.every(t => t.status === 'Completed') && sortedTasks.length > 0 ? '#10b981' : '#94a3b8',
               fontWeight: 800,
               fontSize: '0.75rem'
             }}>
@@ -192,7 +200,7 @@ const TimelineNode = ({ tasks = [], onTaskClick, activeTaskId }) => {
             <span style={{
               fontSize: '0.75rem',
               fontWeight: 700,
-              color: tasks.every(t => t.status === 'Completed') && tasks.length > 0 ? '#10b981' : '#94a3b8'
+              color: sortedTasks.every(t => t.status === 'Completed') && sortedTasks.length > 0 ? '#10b981' : '#94a3b8'
             }}>
               END
             </span>
