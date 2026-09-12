@@ -1,3 +1,15 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Plus, Calendar, Edit, Trash2, X } from 'lucide-react';
+import { projectService } from '../services/projectService';
+import { calculateProjectProgress } from '../utils/progress';
+import StatusBadge from '../components/common/Badge';
+import KineticLoader from '../components/common/KineticLoader';
+import EmptyState from '../components/common/EmptyState';
+import ProjectFormModal from './ProjectFormModal';
+import Modal from '../components/common/Modal';
+import { useToast } from '../context/ToastContext';
 import ProjectIcon from '../components/common/ProjectIcon';
 
 const Projects = () => {
