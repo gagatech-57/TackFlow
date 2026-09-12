@@ -125,7 +125,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
                     padding: '0.75rem 1rem',
                     borderRadius: 'var(--radius-md)',
                     fontSize: '0.9rem',
-                    fontWeight: isActive ? 700 : 500,
+                    fontWeight: 700,
                     color: isActive ? item.accent : 'var(--text-secondary)',
                     backgroundColor: isActive ? `${item.accent}12` : 'transparent',
                     border: isActive ? `1px solid ${item.accent}30` : '1px solid transparent',
@@ -149,7 +149,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
                         <Icon size={17} />
                       </div>
 
-                      <span>{item.label}</span>
+                      <span style={{ fontWeight: 700 }}>{item.label}</span>
 
                       {isActive && (
                         <motion.div
@@ -239,7 +239,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
-                fontWeight: 500
+                fontWeight: 600
               }}>
                 {user?.email || 'user@taskflow.dev'}
               </div>
@@ -263,13 +263,13 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
               borderRadius: '10px',
               color: '#e11d48',
               fontSize: '0.84rem',
-              fontWeight: 600,
+              fontWeight: 700,
               cursor: 'pointer',
               transition: 'var(--transition-fast)'
             }}
           >
             <LogOut size={16} />
-            <span>Sign Out</span>
+            <span style={{ fontWeight: 700 }}>Sign Out</span>
           </motion.button>
         </div>
       </aside>
