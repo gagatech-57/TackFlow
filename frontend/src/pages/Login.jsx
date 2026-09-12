@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Zap, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../components/common/Logo';
 import KineticLoader from '../components/common/KineticLoader';
 
 const Login = () => {
@@ -75,28 +76,8 @@ const Login = () => {
         </svg>
 
         {/* Logo Brand */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', zIndex: 2 }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '12px',
-            background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#ffffff',
-            boxShadow: '0 4px 14px rgba(37, 99, 235, 0.4)'
-          }}>
-            <Zap size={22} fill="#ffffff" />
-          </div>
-          <div>
-            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 800 }}>
-              TaskFlow
-            </span>
-            <span style={{ display: 'block', fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Kinetic Workspace
-            </span>
-          </div>
+        <div style={{ zIndex: 2 }}>
+          <Logo size="lg" variant="light" />
         </div>
 
         {/* Animated Workflow Preview Widget */}
@@ -185,36 +166,16 @@ const Login = () => {
       </div>
 
       {/* Right Column — Elevated Kinetic Form Card */}
-      <div className="w-full flex-1 flex items-center justify-center p-4 sm:p-10 bg-slate-50 min-h-screen lg:min-h-0">
+      <div className="w-full flex-1 flex flex-col items-center justify-center min-h-screen lg:min-h-0 py-8 px-4 sm:px-6 bg-slate-50">
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-none sm:max-w-md bg-white rounded-2xl border border-slate-200 shadow-xl p-5 sm:p-10"
+          className="w-full max-w-none sm:max-w-md bg-white rounded-2xl border border-slate-200 shadow-xl p-5 sm:p-8 my-auto"
         >
           {/* Mobile Branding Header */}
-          <div className="flex items-center gap-3 mb-6 lg:hidden">
-            <div style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#ffffff',
-              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)'
-            }}>
-              <Zap size={20} fill="#ffffff" />
-            </div>
-            <div>
-              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)' }}>
-                TaskFlow
-              </span>
-              <span style={{ display: 'block', fontSize: '0.65rem', color: '#2563eb', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em' }}>
-                Kinetic Workspace
-              </span>
-            </div>
+          <div className="flex items-center justify-center mb-6 lg:hidden">
+            <Logo size="md" />
           </div>
 
           <div style={{ marginBottom: '1.75rem' }}>

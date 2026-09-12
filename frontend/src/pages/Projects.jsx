@@ -1,15 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Calendar, FolderKanban, ArrowRight, Edit, Trash2, X } from 'lucide-react';
-import { projectService } from '../services/projectService';
-import { calculateProjectProgress } from '../utils/progress';
-import StatusBadge from '../components/common/Badge';
-import KineticLoader from '../components/common/KineticLoader';
-import EmptyState from '../components/common/EmptyState';
-import ProjectFormModal from './ProjectFormModal';
-import Modal from '../components/common/Modal';
-import { useToast } from '../context/ToastContext';
+import ProjectIcon from '../components/common/ProjectIcon';
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -121,7 +110,7 @@ const Projects = () => {
 
       {/* Search Bar & Status Filter Tabs */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm w-full min-w-0">
-        {/* Animated Focus Search Bar */}
+        {/* Search Bar */}
         <div style={{ position: 'relative', flex: 1, width: '100%', minWidth: 0 }}>
           <input
             type="text"
@@ -145,8 +134,8 @@ const Projects = () => {
           )}
         </div>
 
-        {/* Filter Pills Scroll Container */}
-        <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 md:pb-0 whitespace-nowrap">
+        {/* Isolated Filter Pills Horizontal Scroll Container */}
+        <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 md:pb-0 whitespace-nowrap shrink-0">
           {['All', 'In Progress', 'Pending', 'Completed', 'Not Started'].map((status) => (
             <button
               key={status}
@@ -184,7 +173,7 @@ const Projects = () => {
       ) : (
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full min-w-0"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 w-full min-w-0"
         >
           <AnimatePresence>
             {filteredProjects.map((project) => {
@@ -199,86 +188,59 @@ const Projects = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   whileHover={{ y: -3 }}
                   onClick={() => navigate(`/projects/${project.id}`)}
-                  className="kinetic-card-interactive w-full min-w-0"
-                  style={{
-                    padding: '1.25rem sm:1.5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    cursor: 'pointer',
-                    position: 'relative'
-                  }}
+                  className="kinetic-card-interactive p-5 sm:p-6 w-full min-w-0 flex flex-col justify-between cursor-pointer relative"
                 >
                   <div>
-                    {/* Header */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-                      <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.3, wordBreak: 'break-word', flex: 1, minWidth: '120px' }}>
-                        {project.name}
-                      </h3>
+                    {/* ROW 1: Project Icon + Project Name + Status */}
+                    <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                        <ProjectIcon size={16} bgClassName="bg-blue-100/70 text-blue-700 p-2" />
+                        <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug break-words">
+                          {project.name}
+                        </h3>
+                      </div>
                       <StatusBadge status={project.status} />
                     </div>
 
                     {/* Description */}
-                    <p style={{
-                      fontSize: '0.84rem',
-                      color: 'var(--text-secondary)',
-                      marginBottom: '1.25rem',
-                      display: '-webkit-box',
-                      lineClamp: 2,
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      minHeight: '2.5rem'
-                    }}>
+                    <p className="text-xs sm:text-sm text-slate-600 mb-4 line-clamp-2 min-h-[2.5rem] break-words">
                       {project.description || 'No description provided for this project stream.'}
                     </p>
                   </div>
 
                   <div>
-                    {/* Progress Bar */}
-                    <div style={{ marginBottom: '1rem' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.375rem' }}>
+                    {/* Progress Section */}
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center text-xs font-semibold text-slate-500 mb-1.5">
                         <span>Stream Completion</span>
-                        <span style={{ color: 'var(--primary)', fontFamily: 'var(--font-mono)' }}>{progressPct}%</span>
+                        <span className="color-primary font-mono font-bold">{progressPct}%</span>
                       </div>
-                      <div style={{ height: '6px', width: '100%', backgroundColor: '#e2e8f0', borderRadius: '3px', overflow: 'hidden' }}>
-                        <div style={{
-                          height: '100%',
-                          width: `${progressPct}%`,
-                          background: 'linear-gradient(90deg, #2563eb, #10b981)',
-                          transition: 'width 0.4s ease'
-                        }} />
+                      <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-blue-600 to-emerald-500 rounded-full transition-all duration-500"
+                          style={{ width: `${progressPct}%` }}
+                        />
                       </div>
                     </div>
 
-                    {/* Footer Info */}
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      paddingTop: '0.875rem',
-                      borderTop: '1px solid var(--border-subtle)',
-                      fontSize: '0.78rem',
-                      color: 'var(--text-muted)'
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                        <Calendar size={14} />
+                    {/* Date + Actions */}
+                    <div className="flex items-center justify-between pt-3 border-t border-slate-200/80 text-xs text-slate-500 font-medium">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar size={14} className="text-slate-400" />
                         <span>{project.startDate ? new Date(project.startDate).toLocaleDateString() : 'No date'}</span>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <div className="flex items-center gap-1">
                         <button
                           onClick={(e) => handleEdit(e, project)}
-                          className="btn btn-ghost"
-                          style={{ padding: '4px', borderRadius: '4px' }}
+                          className="btn btn-ghost p-1.5 text-slate-500 hover:text-blue-600"
                           aria-label="Edit project"
                         >
                           <Edit size={15} />
                         </button>
                         <button
                           onClick={(e) => confirmDelete(e, project)}
-                          className="btn btn-ghost"
-                          style={{ padding: '4px', borderRadius: '4px', color: '#ef4444' }}
+                          className="btn btn-ghost p-1.5 text-slate-500 hover:text-red-600"
                           aria-label="Delete project"
                         >
                           <Trash2 size={15} />

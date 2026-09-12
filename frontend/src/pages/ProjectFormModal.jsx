@@ -235,26 +235,18 @@ const ProjectFormModal = ({ isOpen, onClose, projectToEdit = null, onProjectSave
               />
             </div>
 
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              gap: '0.75rem',
-              marginTop: '1.5rem',
-              paddingTop: '1rem',
-              borderTop: '1px solid var(--border-subtle)'
-            }}>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2.5 mt-6 pt-4 border-t border-slate-200">
               <button
                 type="button"
                 onClick={onClose}
-                className="btn btn-secondary"
+                className="btn btn-secondary w-full sm:w-auto"
                 disabled={loading}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn btn-primary w-full sm:w-auto flex items-center justify-center gap-2"
                 disabled={loading}
               >
                 {loading ? (

@@ -1,18 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Plus, Calendar, Edit, Trash2, CheckCircle2, Clock, Circle, Filter } from 'lucide-react';
-import { projectService } from '../services/projectService';
-import { taskService } from '../services/taskService';
-import { calculateProjectProgress } from '../utils/progress';
-import StatusBadge, { PriorityBadge } from '../components/common/Badge';
-import KineticLoader from '../components/common/KineticLoader';
-import TimelineNode from '../components/common/TimelineNode';
-import TaskFormModal from './TaskFormModal';
-import ProjectFormModal from './ProjectFormModal';
-import Modal from '../components/common/Modal';
-import EmptyState from '../components/common/EmptyState';
-import { useToast } from '../context/ToastContext';
+import ProjectIcon from '../components/common/ProjectIcon';
 
 const ProjectDetails = () => {
   const { id } = useParams();
@@ -163,6 +149,7 @@ const ProjectDetails = () => {
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-5">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-2 flex-wrap">
+              <ProjectIcon size={20} bgClassName="bg-blue-100/70 text-blue-700 p-2.5" />
               <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', wordBreak: 'break-word' }}>
                 {project.name}
               </h1>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Layers, CheckCircle2, Clock, Plus, ArrowRight, FolderKanban } from 'lucide-react';
+import { Layers, CheckCircle2, Clock, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { dashboardService } from '../services/dashboardService';
 import { projectService } from '../services/projectService';
@@ -10,6 +10,7 @@ import { calculateProjectProgress } from '../utils/progress';
 import KineticLoader from '../components/common/KineticLoader';
 import AnimatedNumber from '../components/common/AnimatedNumber';
 import StatusBadge, { PriorityBadge } from '../components/common/Badge';
+import ProjectIcon from '../components/common/ProjectIcon';
 import ProjectFormModal from './ProjectFormModal';
 import TaskFormModal from './TaskFormModal';
 
@@ -120,9 +121,7 @@ const Dashboard = () => {
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>TOTAL PROJECTS</span>
-            <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <FolderKanban size={18} />
-            </div>
+            <ProjectIcon size={18} bgClassName="bg-blue-50 text-blue-600" />
           </div>
           <div style={{ fontSize: '1.875rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.125rem' }}>
             <AnimatedNumber value={metrics.totalProjects} />
@@ -223,43 +222,39 @@ const Dashboard = () => {
                     key={project.id}
                     whileHover={{ x: 3 }}
                     onClick={() => navigate(`/projects/${project.id}`)}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer w-full min-w-0 hover:border-slate-300 transition-all"
+                    className="flex flex-col gap-2.5 p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer w-full min-w-0 hover:border-slate-300 transition-all"
                   >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    {/* ROW 1: Project Name + Status */}
+                    <div className="flex items-center justify-between gap-2 flex-wrap min-w-0">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <ProjectIcon size={14} bgClassName="bg-blue-100/60 text-blue-700 p-1.5" />
                         <span className="text-sm font-bold text-slate-900 break-words line-clamp-1">
                           {project.name}
                         </span>
-                        <StatusBadge status={project.status} />
                       </div>
-                      <div className="text-xs text-slate-500 font-medium">
-                        {taskCount} tasks &bull; {pct}% completed
-                      </div>
+                      <StatusBadge status={project.status} />
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/60">
-                      <div className="flex items-center gap-2">
-                        <div className="h-1.5 w-20 bg-slate-200 rounded-full overflow-hidden sm:hidden">
-                          <div className="h-full bg-blue-600 rounded-full" style={{ width: `${pct}%` }} />
-                        </div>
-                        <div style={{
-                          width: '34px',
-                          height: '34px',
-                          borderRadius: '50%',
-                          backgroundColor: '#ffffff',
-                          border: '1px solid var(--border-subtle)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          color: 'var(--primary)'
-                        }}>
-                          {pct}%
-                        </div>
+                    {/* ROW 2: Task Count + Completion Percentage */}
+                    <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
+                      <span>{taskCount} tasks</span>
+                      <span className="font-bold text-blue-600">{pct}% completed</span>
+                    </div>
+
+                    {/* ROW 3: Progress Bar + Percentage Circle + Action Arrow */}
+                    <div className="flex items-center gap-3 pt-1">
+                      <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-blue-600 to-emerald-500 rounded-full transition-all duration-500"
+                          style={{ width: `${pct}%` }}
+                        />
                       </div>
-                      <ArrowRight size={16} className="text-slate-400" />
+
+                      <div className="shrink-0 w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center font-mono text-[0.7rem] font-bold text-blue-600 shadow-sm">
+                        {pct}%
+                      </div>
+
+                      <ArrowRight size={16} className="shrink-0 text-slate-400" />
                     </div>
                   </motion.div>
                 );
@@ -293,19 +288,21 @@ const Dashboard = () => {
               {urgentTasks.map((task) => (
                 <div
                   key={task.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 w-full min-w-0"
+                  className="flex flex-col gap-2 p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 w-full min-w-0"
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-slate-900 mb-1 break-words">
-                      {task.name}
-                    </div>
-                    <div className="text-xs text-slate-500 font-medium flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-blue-600">{task.project?.name || 'Project'}</span>
-                      {task.dueDate && <span>&bull; Due {new Date(task.dueDate).toLocaleDateString()}</span>}
-                    </div>
+                  {/* ROW 1: Task Name */}
+                  <div className="text-sm font-semibold text-slate-900 break-words">
+                    {task.name}
                   </div>
 
-                  <div className="flex items-center gap-2 flex-wrap pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/60">
+                  {/* ROW 2: Project + Due Date */}
+                  <div className="text-xs text-slate-500 font-medium flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-blue-600">{task.project?.name || 'Project'}</span>
+                    {task.dueDate && <span>&bull; Due {new Date(task.dueDate).toLocaleDateString()}</span>}
+                  </div>
+
+                  {/* ROW 3: Priority + Status Badges */}
+                  <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-slate-200/60">
                     <PriorityBadge priority={task.priority} />
                     <StatusBadge status={task.status} />
                   </div>

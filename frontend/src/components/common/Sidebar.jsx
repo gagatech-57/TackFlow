@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LayoutGrid, FolderKanban, CheckSquare, LogOut, Zap, User, X } from 'lucide-react';
+import { LayoutGrid, FolderKanban, CheckSquare, LogOut, User, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import Logo from './Logo';
 
 const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
   const { user, logout } = useAuth();
@@ -31,6 +32,7 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
   }, [isMobileOpen, setIsMobileOpen]);
 
   const handleLogout = () => {
+    if (setIsMobileOpen) setIsMobileOpen(false);
     logout();
     showToast('Logged out of TaskFlow', 'info');
     navigate('/login');
@@ -75,55 +77,19 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 0.5rem 1.25rem 0.5rem',
+            padding: '0 0.25rem 1.25rem 0.25rem',
             borderBottom: '1px solid var(--border-subtle)',
             marginBottom: '1rem',
             flexShrink: 0
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '12px',
-                background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ffffff',
-                boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)'
-              }}>
-                <Zap size={20} fill="#ffffff" />
-              </div>
-              <div>
-                <span style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '1.15rem',
-                  fontWeight: 800,
-                  color: 'var(--text-main)',
-                  letterSpacing: '-0.02em',
-                  display: 'block',
-                  lineHeight: 1.1
-                }}>
-                  TaskFlow
-                </span>
-                <span style={{
-                  fontSize: '0.65rem',
-                  fontWeight: 700,
-                  color: '#2563eb',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em'
-                }}>
-                  Kinetic Workspace
-                </span>
-              </div>
-            </div>
+            <Logo size="sm" />
 
             {/* Mobile Close Button */}
             {isMobileOpen && (
               <button
                 type="button"
                 onClick={() => setIsMobileOpen(false)}
-                className="p-2.5 text-slate-500 hover:text-slate-900 lg:hidden rounded-lg hover:bg-slate-100 transition-colors"
+                className="p-2 text-slate-500 hover:text-slate-900 lg:hidden rounded-lg hover:bg-slate-100 transition-colors"
                 aria-label="Close navigation menu"
               >
                 <X size={20} />
