@@ -14,11 +14,13 @@ import ProjectIcon from '../components/common/ProjectIcon';
 import ProjectFormModal from './ProjectFormModal';
 import TaskFormModal from './TaskFormModal';
 
+import { pageCache } from '../utils/cache';
+
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const [metrics, setMetrics] = useState({
+  const [metrics, setMetrics] = useState(pageCache.dashboard?.metrics || {
     totalProjects: 0,
     projectsInProgress: 0,
     totalTasks: 0,
@@ -26,19 +28,23 @@ const Dashboard = () => {
     pendingTasks: 0
   });
 
-  const [recentProjects, setRecentProjects] = useState([]);
-  const [urgentTasks, setUrgentTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [recentProjects, setRecentProjects] = useState(pageCache.dashboard?.recentProjects || []);
+  const [urgentTasks, setUrgentTasks] = useState(pageCache.dashboard?.urgentTasks || []);
+  const [loading, setLoading] = useState(!pageCache.dashboard);
 
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
   useEffect(() => {
-    loadDashboardData();
+    if (pageCache.dashboard) {
+      loadDashboardData(true);
+    } else {
+      loadDashboardData(false);
+    }
   }, []);
 
   const loadDashboardData = async (isSilent = false) => {
-    if (!isSilent) setLoading(true);
+    if (!isSilent && !pageCache.dashboard) setLoading(true);
     try {
       const [metricsRes, projectsRes, tasksRes] = await Promise.all([
         dashboardService.getMetrics(),
@@ -46,30 +52,40 @@ const Dashboard = () => {
         taskService.getTasks()
       ]);
 
+      let formattedMetrics = metrics;
       const metricsData = metricsRes?.data || metricsRes;
       if (metricsData && typeof metricsData === 'object') {
-        setMetrics({
+        formattedMetrics = {
           totalProjects: metricsData.totalProjects || 0,
           projectsInProgress: metricsData.projectsInProgress || 0,
           totalTasks: metricsData.totalTasks || 0,
           completedTasks: metricsData.completedTasks || 0,
           pendingTasks: metricsData.pendingTasks || 0
-        });
+        };
+        setMetrics(formattedMetrics);
       }
 
       const projList = Array.isArray(projectsRes) ? projectsRes : (projectsRes?.data || []);
-      setRecentProjects(projList.slice(0, 4));
+      const formattedRecent = projList.slice(0, 4);
+      setRecentProjects(formattedRecent);
 
       const tasksList = Array.isArray(tasksRes) ? tasksRes : (tasksRes?.data || []);
-      const urgent = tasksList
+      const formattedUrgent = tasksList
         .filter(t => t.status !== 'Completed')
         .sort((a, b) => (a.priority === 'High' ? -1 : 1))
         .slice(0, 5);
-      setUrgentTasks(urgent);
+      setUrgentTasks(formattedUrgent);
+
+      // Store in session cache
+      pageCache.dashboard = {
+        metrics: formattedMetrics,
+        recentProjects: formattedRecent,
+        urgentTasks: formattedUrgent
+      };
     } catch (err) {
       console.error('Failed to load dashboard data', err);
     } finally {
-      if (!isSilent) setLoading(false);
+      setLoading(false);
     }
   };
 

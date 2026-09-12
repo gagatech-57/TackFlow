@@ -10,11 +10,12 @@ import EmptyState from '../components/common/EmptyState';
 import ProjectFormModal from './ProjectFormModal';
 import Modal from '../components/common/Modal';
 import { useToast } from '../context/ToastContext';
+import { pageCache } from '../utils/cache';
 import ProjectIcon from '../components/common/ProjectIcon';
 
 const Projects = () => {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState(pageCache.projects || []);
+  const [loading, setLoading] = useState(!pageCache.projects);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
 
@@ -29,20 +30,25 @@ const Projects = () => {
   const { showToast } = useToast();
 
   useEffect(() => {
-    loadProjects();
+    if (pageCache.projects) {
+      loadProjects(true);
+    } else {
+      loadProjects(false);
+    }
   }, []);
 
   const loadProjects = async (isSilent = false) => {
-    if (!isSilent) setLoading(true);
+    if (!isSilent && !pageCache.projects) setLoading(true);
     try {
       const res = await projectService.getProjects();
       const list = Array.isArray(res) ? res : (res?.data || []);
       setProjects(list);
+      pageCache.projects = list;
     } catch (err) {
       console.error('Failed to fetch projects', err);
       if (!isSilent) showToast('Failed to load project streams', 'error');
     } finally {
-      if (!isSilent) setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -50,11 +56,11 @@ const Projects = () => {
     if (savedProject && savedProject.id) {
       setProjects((prev) => {
         const exists = prev.some(p => p.id === savedProject.id);
-        if (exists) {
-          return prev.map(p => p.id === savedProject.id ? { ...p, ...savedProject } : p);
-        } else {
-          return [savedProject, ...prev];
-        }
+        const updated = exists
+          ? prev.map(p => p.id === savedProject.id ? { ...p, ...savedProject } : p)
+          : [savedProject, ...prev];
+        pageCache.projects = updated;
+        return updated;
       });
     }
     loadProjects(true);

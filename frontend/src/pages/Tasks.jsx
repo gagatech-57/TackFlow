@@ -10,10 +10,11 @@ import Modal from '../components/common/Modal';
 import { useToast } from '../context/ToastContext';
 
 import CustomSelect from '../components/common/CustomSelect';
+import { pageCache } from '../utils/cache';
 
 const Tasks = () => {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [tasks, setTasks] = useState(pageCache.tasks || []);
+  const [loading, setLoading] = useState(!pageCache.tasks);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [priorityFilter, setPriorityFilter] = useState('All');
@@ -28,20 +29,25 @@ const Tasks = () => {
   const { showToast } = useToast();
 
   useEffect(() => {
-    loadTasks();
+    if (pageCache.tasks) {
+      loadTasks(true);
+    } else {
+      loadTasks(false);
+    }
   }, []);
 
   const loadTasks = async (isSilent = false) => {
-    if (!isSilent) setLoading(true);
+    if (!isSilent && !pageCache.tasks) setLoading(true);
     try {
       const res = await taskService.getTasks();
       const list = Array.isArray(res) ? res : (res?.data || []);
       setTasks(list);
+      pageCache.tasks = list;
     } catch (err) {
       console.error('Failed to load tasks', err);
       if (!isSilent) showToast('Failed to load task stream', 'error');
     } finally {
-      if (!isSilent) setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -49,11 +55,11 @@ const Tasks = () => {
     if (savedTask && savedTask.id) {
       setTasks((prev) => {
         const exists = prev.some(t => t.id === savedTask.id);
-        if (exists) {
-          return prev.map(t => t.id === savedTask.id ? { ...t, ...savedTask } : t);
-        } else {
-          return [savedTask, ...prev];
-        }
+        const updated = exists
+          ? prev.map(t => t.id === savedTask.id ? { ...t, ...savedTask } : t)
+          : [savedTask, ...prev];
+        pageCache.tasks = updated;
+        return updated;
       });
     }
     loadTasks(true);

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService';
+import { pageCache } from '../utils/cache';
 
 const AuthContext = createContext();
 
@@ -103,6 +104,7 @@ export const AuthProvider = ({ children }) => {
     } catch (e) {
       // Ignore network error on logout
     } finally {
+      pageCache.clearAll();
       localStorage.removeItem('taskflow_token');
       localStorage.removeItem('taskflow_user');
       setUser(null);
