@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, CheckCircle2, Check, Clock, Circle, Calendar, Edit, Trash2, X } from 'lucide-react';
+import { Search, Plus, CheckCircle2, Check, Play, Clock, Circle, Calendar, Edit, Trash2, X } from 'lucide-react';
 import { taskService } from '../services/taskService';
 import StatusBadge, { PriorityBadge } from '../components/common/Badge';
 import KineticLoader from '../components/common/KineticLoader';
@@ -107,10 +107,32 @@ const Tasks = () => {
       const isSuccess = res && (res.success || res.status === 200);
       if (isSuccess) {
         showToast(nextStatus === 'Completed' ? 'Task node resolved! Workflow advanced.' : 'Task returned to pending', 'success');
-        setTasks(tasks.map(t => t.id === task.id ? { ...t, status: nextStatus } : t));
+        setTasks(prev => {
+          const updated = prev.map(t => t.id === task.id ? { ...t, status: nextStatus } : t);
+          pageCache.tasks = updated;
+          return updated;
+        });
       }
     } catch (err) {
       showToast('Failed to change task status', 'error');
+    }
+  };
+
+  const handleAdvanceTaskStatus = async (task, targetStatus) => {
+    try {
+      const res = await taskService.updateTask(task.id, { status: targetStatus });
+      const isSuccess = res && (res.success || res.status === 200 || Boolean(res.data));
+      if (isSuccess) {
+        const msg = targetStatus === 'In Progress' ? 'Task moved to In Progress!' : 'Task completed!';
+        showToast(msg, 'success');
+        setTasks((prev) => {
+          const updated = prev.map(t => t.id === task.id ? { ...t, status: targetStatus } : t);
+          pageCache.tasks = updated;
+          return updated;
+        });
+      }
+    } catch (err) {
+      showToast('Failed to update task workflow status', 'error');
     }
   };
 
@@ -390,9 +412,33 @@ const Tasks = () => {
                               </span>
 
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flexShrink: 0 }}>
-                                {!isCompleted && (
+                                {task.status === 'Pending' && (
                                   <button
-                                    onClick={() => handleToggleComplete(task)}
+                                    onClick={() => handleAdvanceTaskStatus(task, 'In Progress')}
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '0.25rem',
+                                      padding: '0.2rem 0.5rem',
+                                      borderRadius: '6px',
+                                      backgroundColor: '#eff6ff',
+                                      color: '#2563eb',
+                                      border: '1px solid #bfdbfe',
+                                      fontSize: '0.72rem',
+                                      fontWeight: 700,
+                                      cursor: 'pointer',
+                                      transition: 'all 0.15s ease'
+                                    }}
+                                    title="Move task to In Progress"
+                                  >
+                                    <Play size={10} style={{ fill: '#2563eb' }} />
+                                    <span>In Progress</span>
+                                  </button>
+                                )}
+
+                                {task.status === 'In Progress' && (
+                                  <button
+                                    onClick={() => handleAdvanceTaskStatus(task, 'Completed')}
                                     style={{
                                       display: 'flex',
                                       alignItems: 'center',
@@ -407,10 +453,10 @@ const Tasks = () => {
                                       cursor: 'pointer',
                                       transition: 'all 0.15s ease'
                                     }}
-                                    title="Mark task completed"
+                                    title="Move task to Completed"
                                   >
                                     <Check size={12} />
-                                    <span>Complete</span>
+                                    <span>Completed</span>
                                   </button>
                                 )}
                                 <button

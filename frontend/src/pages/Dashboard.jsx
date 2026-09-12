@@ -332,33 +332,10 @@ const Dashboard = () => {
                     {task.dueDate && <span>&bull; Due {new Date(task.dueDate).toLocaleDateString()}</span>}
                   </div>
 
-                  {/* ROW 3: Priority + Status Badges & Quick Complete Action */}
-                  <div className="flex items-center justify-between gap-2 flex-wrap pt-1 border-t border-slate-200/60">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <PriorityBadge priority={task.priority} />
-                      <StatusBadge status={task.status} />
-                    </div>
-                    <button
-                      onClick={() => handleCompleteUrgentTask(task)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem',
-                        padding: '0.2rem 0.5rem',
-                        borderRadius: '6px',
-                        backgroundColor: '#ecfdf5',
-                        color: '#047857',
-                        border: '1px solid #a7f3d0',
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease'
-                      }}
-                      title="Mark task completed"
-                    >
-                      <Check size={12} />
-                      <span>Complete</span>
-                    </button>
+                  {/* ROW 3: Priority + Status Badges */}
+                  <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-slate-200/60">
+                    <PriorityBadge priority={task.priority} />
+                    <StatusBadge status={task.status} />
                   </div>
                 </div>
               ))}
